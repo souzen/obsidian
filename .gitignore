@@ -1,2 +1,5 @@
 # Obsidian vault
 vault/
+
+# System files
+.DS_STORE
