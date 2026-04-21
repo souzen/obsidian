@@ -16,7 +16,7 @@ Both `work/` and `my/` are organised using the **PARA method** (Projects → Are
 - **Archive** — completed or paused items
 
 ```
-/Users/lsosnicki/vault/
+~/obsidian/vault/
 ├── journal/                    # Daily notes: YYYY-MM-DD.md
 ├── inbox/                      # Incoming files, data files, clipped articles, PDFs, saved files and others
 ├── work/                       # PARA system — professional context (InPost / GoKart)
@@ -72,7 +72,7 @@ tags:
 
 ## Key conventions
 
-- **Vault path**: always `/Users/lsosnicki/vault` (not the git repo root)
+- **Vault path**: always `~/obsidian/vault` (not the git repo root)
 - **Project links**: `[[project-name]]` in headings — the name is the project filename without `.md`
 - **People links**: `[[@handle]]` — handle = file name under `work/areas/people/`
 - **Action items**: saved to the matching project file, not left in the journal
