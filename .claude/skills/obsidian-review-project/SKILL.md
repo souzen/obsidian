@@ -39,7 +39,6 @@ Filesystem:read_text_file <resolved_path>
 ```
 
 Extract from frontmatter:
-- `tags` → used in Phase 3 for context search
 - Any backlinks `[[...]]` in the file body → note them for Phase 3
 
 ---
@@ -179,19 +178,7 @@ Read the 7 most recent journal files. Search for:
 - Any `- [ ]` tasks that reference this project
 - Any decisions or blockers logged in meetings
 
-**3b-2 — Files with same tags**
-
-From frontmatter `tags` extracted in Phase 0:
-```
-Filesystem:search_files /Users/lsosnicki/obsidian/vault/work/ <tag>
-Filesystem:search_files /Users/lsosnicki/obsidian/vault/my/ <tag>
-```
-Read matching files. Look for:
-- Related tasks or decisions
-- Duplicate tasks already captured elsewhere
-- Context that changes the priority of existing tasks
-
-**3b-3 — Backlinked files**
+**3b-2 — Backlinked files**
 
 For each `[[link]]` found in the project file body:
 ```
@@ -259,8 +246,7 @@ Phase 3 — Next Actions: N changes applied / Skipped
 | File not found | Ask user to confirm path or pick from list |
 | No `### Outcomes` section | Skip directly to interview (Step 2c) |
 | No `### Next Actions` section | Note it, offer to create the section |
-| Journal dir empty / no recent entries | Skip journal lookup, continue with tags + backlinks |
-| Tag search returns 0 results | Skip, note in summary |
+| Journal dir empty / no recent entries | Skip journal lookup, continue with backlinks |
 | Backlinked file not found on disk | Skip with a note: "[[X]] not found in vault" |
 | File is in English only | Skip Polish diacritics check |
 | User says "only check language" | Run Phase 1 only, skip 2 and 3 |
