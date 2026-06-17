@@ -48,7 +48,6 @@ For each file in the list:
 Split the file content into sections by Markdown headings (`##`, `###`). Treat each section as an independent unit for review.
 
 Sections to **skip** (do not modify their content):
-- `📌 My Day` — task checkboxes, leave untouched
 - Empty sections or sections containing only `---` separators
 - YAML frontmatter (`---` at the top of the file)
 - Inline tags (`#tag`) and wikilinks (`[[...]]`) — preserve as-is within text
@@ -102,6 +101,17 @@ For each changed section: replace the original text with the corrected text, lea
 
 Use `Filesystem:write_file` to save the updated version of the entire file.
 
+### 2e — Remove the `📌 My Day` section
+
+Delete the entire `📌 My Day` section from the file — its heading and all its content, including task checkboxes (`- [ ]` / `- [x]`) and any `[SUGGESTION]` items.
+
+- Match the section by keyword (`My Day`, with or without emoji).
+- Remove everything from the `## 📌 My Day` (or `### My Day`) heading up to — but not including — the next heading of the same or higher level.
+- If the section is absent, do nothing.
+- Leave all other sections untouched.
+
+This is a planning artifact, not journal content; it must not remain in the reviewed file.
+
 ---
 
 ## Step 3 — Mark file as `#claude-reviewed`
@@ -141,7 +151,7 @@ tags:
   - claude-reviewed
 ---
 
-## 📌 My Day
+## 🌊 Meetings
 ...
 ```
 
@@ -155,7 +165,7 @@ After applying language corrections, synthesize the content of the entire file i
 
 ### What to include
 
-Read all populated sections of the file — `📌 My Day`, `🌊 Meetings`, `🧩 Notes`, `💡 Reflections` — and extract the key information from that day.
+Read all populated sections of the file — `🌊 Meetings`, `🧩 Notes`, `💡 Reflections` — and extract the key information from that day.
 
 Write the summary as a **bullet list of key takeaways**, for example:
 
@@ -179,7 +189,7 @@ Write the summary as a **bullet list of key takeaways**, for example:
 
 ### Positioning the Summary section
 
-After generating (or preserving) the summary content, **move the entire `✍️ Summary` section to be the first section in the file**, immediately after the YAML frontmatter closing `---` and before all other sections (`📌 My Day`, `🌊 Meetings`, etc.). Add a blank line after the last bullet of the summary text.
+After generating (or preserving) the summary content, **move the entire `✍️ Summary` section to be the first section in the file**, immediately after the YAML frontmatter closing `---` and before all other sections (`🌊 Meetings`, etc.). Add a blank line after the last bullet of the summary text.
 
 **Important:** Place `## ✍️ Summary` on the very next line after the closing `---` — **no blank line** between frontmatter and the Summary heading. There **is** a blank line between the `## ✍️ Summary` heading and the first bullet.
 
@@ -193,9 +203,6 @@ tags:
 
 - Key takeaway 1
 - Key takeaway 2
-
-## 📌 My Day
-...
 
 ## 🌊 Meetings
 ...
