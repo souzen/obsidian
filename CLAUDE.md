@@ -60,14 +60,14 @@ tags:
 ---
 ## Summary        # written by review skill; placed first
 
-## 📌 My Day         # 3–7 task checkboxes; leave untouched during review
+## My Day         # 3–7 task checkboxes; leave untouched during review
 
-## 🌊 Meetings       # ### Title [[project-link]] subsections
+## Meetings       # ### Title [[project-link]] subsections
                      # format: ### Meeting Title (HH:MM–HH:MM)
 
-## 🧩 Notes
+## Notes
 
-## 💡 Reflections
+## Reflections
 ```
 
 ## Key conventions
