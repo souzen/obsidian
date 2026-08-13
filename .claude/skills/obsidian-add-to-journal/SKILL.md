@@ -14,21 +14,21 @@ description: >
 
 Adds a formatted meeting note to the Obsidian vault journal.
 
-**Vault:** `/Users/lsosnicki/vault`  
-**Journal:** `/Users/lsosnicki/vault/journal/`
+**Vault:** `/Users/lsosnicki/obsidian/vault`  
+**Journal:** `/Users/lsosnicki/obsidian/vault/journal/`
 
 ---
 
 ## Step 1 — Determine date and target file
 
 - Default: **today**. If the user provided a different date → use it.
-- Format: `YYYY-MM-DD` → file: `/Users/lsosnicki/vault/journal/<YYYY-MM-DD>.md`
+- Format: `YYYY-MM-DD` → file: `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 ---
 
 ## Step 2 — Read the journal file
 
-Use `Filesystem:read_text_file` on the target path.
+Use the Read tool on the target path.
 
 - **File exists** → read full content; preserve existing content — the note will be **appended** to the `### Meetings` section or at the end of the file.
 - **File does not exist** → create a new file with minimal structure (see Step 6b).
@@ -102,9 +102,9 @@ Execute this step **before** saving the journal, if the user's notes contain cle
 
 ### 5a — Detect project file
 
-**Projects folder:** `/Users/lsosnicki/vault/work/projects/`
+**Projects folder:** `/Users/lsosnicki/obsidian/vault/work/projects/`
 
-Get the file list: `Filesystem:list_directory` on `/Users/lsosnicki/vault/work/projects/`.
+Get the file list: Bash `ls /Users/lsosnicki/obsidian/vault/work/projects/`.
 
 For each action item, try to match a project:
 
@@ -122,7 +122,7 @@ For each action item, try to match a project:
 
 ### 5b — Append action items to project file
 
-Read the project file: `Filesystem:read_text_file`.
+Read the project file with the Read tool.
 
 Append action items at the end of the file as a block:
 
@@ -133,7 +133,7 @@ Append action items at the end of the file as a block:
 - [ ] <action item 2>
 ```
 
-Save: `Filesystem:write_file` (full file with appended block).
+Save with the Write tool (full file with appended block).
 
 ---
 
@@ -170,7 +170,7 @@ If no project detected → heading without links:
 
 ## Step 7 — Save the journal file
 
-`Filesystem:write_file` → `/Users/lsosnicki/vault/journal/<YYYY-MM-DD>.md`
+Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 Write the **full file** (not a patch) — the read content + appended note.
 
@@ -208,7 +208,7 @@ date: <YYYY-MM-DD>
 
 ```
 ✅ Note saved:
-📅 /Users/lsosnicki/vault/journal/<YYYY-MM-DD>.md
+📅 /Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md
 📌 Meeting: <Title>
 📁 Action items → <project file name> (N items)
 ```

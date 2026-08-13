@@ -25,7 +25,7 @@ Creates a structured daily plan **for work matters only** and saves it to the Ob
 
 ## Step 2 — Check or create the journal file
 
-Use `Filesystem:read_text_file` on the target path:
+Use the Read tool on the target path:
 
 - **File exists** → load and preserve existing notes. Only fill in empty placeholders.
 - **File does not exist** → continue; the template will be loaded in Step 6a.
@@ -34,9 +34,9 @@ Use `Filesystem:read_text_file` on the target path:
 
 ## Step 3 — Load all active projects
 
-Use `Filesystem:list_directory` on `/Users/lsosnicki/obsidian/vault/work/projects/` to get all `.md` files.
+Use Bash `ls /Users/lsosnicki/obsidian/vault/work/projects/` to get all `.md` files.
 
-Load all of them using `Filesystem:read_multiple_files`.
+Load all of them using the Read tool.
 
 Extract from each project:
 - Open checkboxes `- [ ]` (tasks to do)
@@ -89,10 +89,8 @@ Look only for emails requiring a reply or action. Ignore FYI/CC.
 
 **Always** load the current template before building the file, and use it to structure the day:
 
-```
-Filesystem:read_text_file
+Use the Read tool
 → /Users/lsosnicki/obsidian/vault/work/resources/tools/obsidian/templates/daily.md
-```
 
 - Use the loaded template as the base structure of the journal file.
 - If the template contains `{{date}}` or other Obsidian variables — substitute them with the correct value (e.g. date in `YYYY-MM-DD` format).
@@ -129,7 +127,7 @@ Fill in sections with data from steps 3–5. If the journal file already existed
 
 ## Step 7 — Save the file
 
-`Filesystem:write_file` → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
+Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 ---
 
@@ -153,4 +151,4 @@ Also display a **brief chat summary**: meetings + top tasks for today.
 - **Project file does not exist** → skip without error
 - **Journal file already has content** → preserve it, fill only placeholders
 - **Planning for tomorrow** → use tomorrow's calendar, projects unchanged
-- **Filesystem unavailable** → display plan in chat, inform user that saving failed
+- **Vault unavailable** → display plan in chat, inform user that saving failed

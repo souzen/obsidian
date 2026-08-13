@@ -44,14 +44,15 @@ Four skills drive the main workflows. Each skill file is a detailed step-by-step
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
-| `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file from calendar + emails + kanban |
 | `obsidian-add-to-journal` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
+| `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file from calendar + emails + kanban |
 | `obsidian-review-journal` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
+| `obsidian-review-project` | "review project", "sprawdź projekt", "przejrzyj projekt" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
 
 ## Journal file format
 
-Daily notes follow this structure (populated by the `plan-my-day` skill using the template at `vault/work/resources/engineer/obsidian/templates/daily.md`):
+Daily notes follow this structure (populated by the `plan-my-day` skill using the template at `vault/work/resources/tools/obsidian/templates/daily.md`):
 
 ```markdown
 ---
@@ -75,14 +76,17 @@ tags:
 - **Vault path**: always `~/obsidian/vault` (not the git repo root)
 - **Project links**: `[[project-name]]` in headings — the name is the project filename without `.md`
 - **People links**: `[[@handle]]` — handle = file name under `work/areas/people/`
+- **Person notes**: freeform, no fixed template — running task checkboxes (`- [ ]`/`- [x]`) about things to raise/follow up with that person, occasionally a loose `### Goals` section, plus inline `[[...]]` links to teams/projects. Many are empty. Don't impose headings or frontmatter that aren't already there.
 - **Action items**: saved to the matching project file, not left in the journal
 - **Language**: notes are mixed Polish/English; detect per-section, never translate
 - **Meeting titles**: strip time patterns (`HH:MM`, `HH:MM–HH:MM`) before using as headings
 - **Kanban**: only `## Doing` column matters; `- [ ]` = active, `- [x]` = done today
 - **`#claude-reviewed` tag**: presence means skip the file — never re-process it
+- **Archive**: manual only, no skill does this automatically. Observed pattern: project/area files → `archive/<year>/`; inactive people → `archive/people/`; team-specific docs → `archive/<team-name>/`; kanban boards snapshotted as `<board-name>-archive-<year>.md`. Journal archive is flat (`journal/archive/YYYY-MM-DD.md`, no year subfolder) — inconsistent with the others but that's the real state.
 
 ## MCP integrations
 
 - **Microsoft 365** — calendar and email search (pre-approved in `settings.local.json`)
-- **Filesystem** — read/write vault files
 - **PDF Viewer** — read PDFs for inbox summarisation
+
+Vault files themselves are read/written with the built-in Read/Write/Edit tools and Bash (`ls`, `cp`) — there is no "Filesystem" MCP server. Skill files should reference these, not `Filesystem:*` tool calls.

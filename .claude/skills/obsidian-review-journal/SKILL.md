@@ -17,17 +17,17 @@ description: >
 
 Reviews journal files in the Obsidian vault, improves language (Polish or English — auto-detected), saves the improved version, and marks the file as `#claude-reviewed`.
 
-**Vault:** `/Users/lsosnicki/vault`
-**Journal dir:** `/Users/lsosnicki/vault/journal/`
+**Vault:** `/Users/lsosnicki/obsidian/vault`
+**Journal dir:** `/Users/lsosnicki/obsidian/vault/journal/`
 
 ---
 
 ## Step 1 — Find unprocessed files
 
-Use `Filesystem:list_directory` on `/Users/lsosnicki/vault/journal/`.
+Use Bash `ls /Users/lsosnicki/obsidian/vault/journal/`.
 
 For each `.md` file:
-- Read it (`Filesystem:read_text_file`)
+- Read it with the Read tool
 - Check whether it contains the tag `#claude-reviewed` **anywhere in the file** (in content or frontmatter)
 - **Skip the file if the tag is present**
 - If the filename matches the `YYYY-MM-DD.md` pattern, parse the date and **skip the file if the date is in the future** (after today)
@@ -99,7 +99,7 @@ For each section with a detected language, apply the following corrections:
 
 For each changed section: replace the original text with the corrected text, leaving the rest of the file unchanged.
 
-Use `Filesystem:write_file` to save the updated version of the entire file.
+Use the Write tool to save the updated version of the entire file.
 
 ### 2e — Remove the `📌 My Day` section
 
@@ -155,7 +155,7 @@ tags:
 ...
 ```
 
-Save the file with the tag using `Filesystem:write_file`.
+Save the file with the tag using the Write tool.
 
 ---
 
@@ -208,7 +208,7 @@ tags:
 ...
 ```
 
-Use `Filesystem:write_file` to save the file with the summary filled in and repositioned.
+Use the Write tool to save the file with the summary filled in and repositioned.
 
 ---
 

@@ -7,8 +7,8 @@ description: Saves uploaded files (PDF, DOCX, image) or web article URLs as stru
 
 Saves uploaded files or web articles as structured Markdown notes into the user's Obsidian vault inbox.
 
-**Vault path:** `/Users/lsosnicki/vault`
-**Target folder:** `/Users/lsosnicki/vault/inbox/`
+**Vault path:** `/Users/lsosnicki/obsidian/vault`
+**Target folder:** `/Users/lsosnicki/obsidian/vault/inbox/`
 
 ---
 
@@ -29,8 +29,8 @@ Accept any of the following:
 2. **Extract core content**: title, author (if present), date (if present), main topics
 3. **Generate note** using the Note Template below
 4. **Derive filename** from the document title or content (slugified, max 60 chars)
-5. **Write summary note** using Filesystem `write_file` to `/Users/lsosnicki/vault/inbox/<filename>.md`
-6. **Copy original file** using Filesystem `copy_file` from its upload path to `/Users/lsosnicki/vault/inbox/<filename>.<original-extension>` — use the same base name as the summary note
+5. **Write summary note** using the Write tool to `/Users/lsosnicki/obsidian/vault/inbox/<filename>.md`
+6. **Copy original file** using Bash `cp` from its upload path to `/Users/lsosnicki/obsidian/vault/inbox/<filename>.<original-extension>` — use the same base name as the summary note
 7. **Confirm** to the user with both file paths
 
 ### Input: URL / Article Link
@@ -39,7 +39,7 @@ Accept any of the following:
 2. **Extract core content**: title, author (if present), publication date (if present), main topics
 3. **Generate note** using the Note Template below — **always include the source URL**
 4. **Derive filename** from the article title (slugified, max 60 chars)
-5. **Write summary note** using Filesystem `write_file` to `/Users/lsosnicki/vault/inbox/<filename>.md`
+5. **Write summary note** using the Write tool to `/Users/lsosnicki/obsidian/vault/inbox/<filename>.md`
 6. **Confirm** to the user with the file path
 
 ---
@@ -126,14 +126,14 @@ After writing the files, always confirm:
 
 ```
 ✅ Zapisano do Obsidian:
-📄 /Users/lsosnicki/vault/inbox/<filename>.md  ← summary
-📎 /Users/lsosnicki/vault/inbox/<filename>.<ext>  ← original file
+📄 /Users/lsosnicki/obsidian/vault/inbox/<filename>.md  ← summary
+📎 /Users/lsosnicki/obsidian/vault/inbox/<filename>.<ext>  ← original file
 🏷️ Tags: #inbox #<tag1> #<tag2>
 ```
 
 For URL input (no file to copy):
 ```
 ✅ Zapisano do Obsidian:
-📄 /Users/lsosnicki/vault/inbox/<filename>.md
+📄 /Users/lsosnicki/obsidian/vault/inbox/<filename>.md
 🏷️ Tags: #inbox #<tag1> #<tag2>
 ```

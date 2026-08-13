@@ -26,17 +26,15 @@ Reviews a project `.md` file in the Obsidian vault across three sequential phase
 If the user provided a full path → use it directly.  
 If the user provided a project name → search for a matching file:
 
+Use Bash:
 ```
-Filesystem:list_directory /Users/lsosnicki/obsidian/vault/work/projects/
-Filesystem:list_directory /Users/lsosnicki/obsidian/vault/my/projects/
+ls /Users/lsosnicki/obsidian/vault/work/projects/
+ls /Users/lsosnicki/obsidian/vault/my/projects/
 ```
 
 Match by filename (case-insensitive, ignore dashes/spaces). If ambiguous → ask the user to pick.
 
-Read the file:
-```
-Filesystem:read_text_file <resolved_path>
-```
+Read the file with the Read tool: `<resolved_path>`
 
 Extract from frontmatter:
 - Any backlinks `[[...]]` in the file body → note them for Phase 3
@@ -72,7 +70,7 @@ Show the user a **diff-style summary** in chat:
 - Line 41: Style: "we need to do X thing" → "Do X"
 ```
 
-Then **auto-save** the corrected file using `Filesystem:write_file`.
+Then **auto-save** the corrected file using the Write tool.
 
 Confirm: `✅ Language corrections saved to <filename>`
 
@@ -146,7 +144,7 @@ Present the proposed `### Outcomes` section in full. Ask:
 
 > "Should I replace the Outcomes section with this? (yes / edit first / skip)"
 
-On "yes" → update file with `Filesystem:write_file` and confirm.  
+On "yes" → update file with the Write tool and confirm.  
 On "edit first" → iterate on the draft in chat.  
 On "skip" → move to Phase 3 without saving.
 
@@ -170,9 +168,7 @@ Run these lookups in parallel:
 
 **3b-1 — Recent journal entries (last 7 days)**
 
-```
-Filesystem:list_directory /Users/lsosnicki/obsidian/vault/journal/
-```
+Use Bash `ls /Users/lsosnicki/obsidian/vault/journal/`.
 Read the 7 most recent journal files. Search for:
 - Mentions of this project (by name or filename)
 - Any `- [ ]` tasks that reference this project
@@ -180,10 +176,7 @@ Read the 7 most recent journal files. Search for:
 
 **3b-2 — Backlinked files**
 
-For each `[[link]]` found in the project file body:
-```
-Filesystem:read_text_file /Users/lsosnicki/obsidian/vault/<resolved_link>.md
-```
+For each `[[link]]` found in the project file body, use the Read tool on `/Users/lsosnicki/obsidian/vault/<resolved_link>.md`.
 Look for tasks or updates that relate back to this project.
 
 ### Step 3c — Analyze and propose upgrades
@@ -217,7 +210,7 @@ Proposed changes:
 Ask:
 > "Should I apply these changes to the Next Actions section? (yes / pick individually / skip)"
 
-On "yes" → apply all changes and save with `Filesystem:write_file`.  
+On "yes" → apply all changes and save with the Write tool.  
 On "pick individually" → present each change as a y/n confirmation.  
 On "skip" → do not modify, just summarize findings in chat.
 
