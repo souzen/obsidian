@@ -30,7 +30,7 @@ For each `.md` file:
 - Read it with the Read tool
 - Check whether it contains the tag `#claude-reviewed` **anywhere in the file** (in content or frontmatter)
 - **Skip the file if the tag is present**
-- If the filename matches the `YYYY-MM-DD.md` pattern, parse the date and **skip the file if the date is in the future** (after today)
+- If the filename matches the `YYYY-MM-DD.md` pattern, parse the date and **skip the file if the date is today or in the future** — only fully-elapsed days are safe to summarize and lock
 
 Build a list of files to process (those without `#claude-reviewed`).
 
@@ -53,10 +53,10 @@ Sections to **skip** (do not modify their content):
 - Inline tags (`#tag`) and wikilinks (`[[...]]`) — preserve as-is within text
 
 Sections to **process** (improve language):
-- `💡 Reflections` — skip if empty
-- `✍️ Summary` — skip if empty (will be populated in Step 5)
-- `🧩 Notes` — all narrative text and bullet lists
-- `🌊 Meetings` — descriptive text under meeting subheadings (**not** the meeting titles or times in `### Title (HH:MM–HH:MM)` format)
+- `Reflections` — skip if empty
+- `Summary` — skip if empty (will be populated in Step 5)
+- `Notes` — all narrative text and bullet lists
+- `Meetings` — descriptive text under meeting subheadings (**not** the meeting titles or times in `### Title (HH:MM–HH:MM)` format)
 - Any other sections containing narrative text
 
 > **Note:** Section names may vary between files (e.g. `Meetings` without emoji, `Notes` vs `Other Notes`). Match sections by keyword, not exact string.
@@ -101,12 +101,12 @@ For each changed section: replace the original text with the corrected text, lea
 
 Use the Write tool to save the updated version of the entire file.
 
-### 2e — Remove the `📌 My Day` section
+### 2e — Remove the `My Day` section
 
-Delete the entire `📌 My Day` section from the file — its heading and all its content, including task checkboxes (`- [ ]` / `- [x]`) and any `[SUGGESTION]` items.
+Delete the entire `My Day` section from the file — its heading and all its content, including task checkboxes (`- [ ]` / `- [x]`) and any `[SUGGESTION]` items.
 
 - Match the section by keyword (`My Day`, with or without emoji).
-- Remove everything from the `## 📌 My Day` (or `### My Day`) heading up to — but not including — the next heading of the same or higher level.
+- Remove everything from the `## My Day` (or `### My Day`) heading up to — but not including — the next heading of the same or higher level.
 - If the section is absent, do nothing.
 - Leave all other sections untouched.
 
@@ -159,13 +159,13 @@ Save the file with the tag using the Write tool.
 
 ---
 
-## Step 4 — Write day summary into `✍️ Summary` section
+## Step 5 — Write day summary into `Summary` section
 
-After applying language corrections, synthesize the content of the entire file into a concise summary and write it into the `✍️ Summary` section (or `Summary` / `Closing line` — match by keyword).
+After applying language corrections, synthesize the content of the entire file into a concise summary and write it into the `Summary` section (or `Summary` / `Closing line` — match by keyword).
 
 ### What to include
 
-Read all populated sections of the file — `🌊 Meetings`, `🧩 Notes`, `💡 Reflections` — and extract the key information from that day.
+Read all populated sections of the file — `Meetings`, `Notes`, `Reflections` — and extract the key information from that day.
 
 Write the summary as a **bullet list of key takeaways**, for example:
 
@@ -185,13 +185,13 @@ Write the summary as a **bullet list of key takeaways**, for example:
 - Be factual and brief — no filler phrases like "Today was a busy day"
 - Include: decisions made, key outcomes from meetings, open action items, important tickets/blockers
 - Omit: routine recurring meetings with no notable outcome, empty sections
-- If `✍️ Summary` already has content → **preserve it**, do not overwrite
+- If `Summary` already has content → **preserve it**, do not overwrite
 
 ### Positioning the Summary section
 
-After generating (or preserving) the summary content, **move the entire `✍️ Summary` section to be the first section in the file**, immediately after the YAML frontmatter closing `---` and before all other sections (`🌊 Meetings`, etc.). Add a blank line after the last bullet of the summary text.
+After generating (or preserving) the summary content, **move the entire `Summary` section to be the first section in the file**, immediately after the YAML frontmatter closing `---` and before all other sections (`Meetings`, etc.). Add a blank line after the last bullet of the summary text.
 
-**Important:** Place `## ✍️ Summary` on the very next line after the closing `---` — **no blank line** between frontmatter and the Summary heading. There **is** a blank line between the `## ✍️ Summary` heading and the first bullet.
+**Important:** Place `## Summary` on the very next line after the closing `---` — **no blank line** between frontmatter and the Summary heading. There **is** a blank line between the `## Summary` heading and the first bullet.
 
 Example final file structure:
 ```markdown
@@ -199,7 +199,7 @@ Example final file structure:
 tags:
   - claude-reviewed
 ---
-## ✍️ Summary
+## Summary
 
 - Key takeaway 1
 - Key takeaway 2

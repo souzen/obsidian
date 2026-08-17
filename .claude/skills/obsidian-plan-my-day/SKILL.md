@@ -23,33 +23,28 @@ Creates a structured daily plan **for work matters only** and saves it to the Ob
 
 ---
 
-## Step 2 — Check or create the journal file
+## Step 2 — Gather all inputs (in parallel)
 
-Use the Read tool on the target path:
+None of the following depend on each other's output — issue the reads/searches together in the same turn rather than one at a time:
 
-- **File exists** → load and preserve existing notes. Only fill in empty placeholders.
-- **File does not exist** → continue; the template will be loaded in Step 6a.
-
----
-
-## Step 3 — Load all active projects
-
-Use Bash `ls /Users/lsosnicki/obsidian/vault/work/projects/` to get all `.md` files.
-
-Load all of them using the Read tool.
-
-Extract from each project:
-- Open checkboxes `- [ ]` (tasks to do)
-- Assigned people `[[@...]]`
-- Frontmatter tags
-
-If a project file does not exist — skip it, do not abort.
+- **Journal file** — Read tool on the target path (`/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`).
+  - File exists → note to preserve its existing content in Step 4.
+  - File does not exist → note that the template (below) will be used as the base structure in Step 4.
+- **Template** — Read tool on `/Users/lsosnicki/obsidian/vault/work/resources/tools/obsidian/templates/daily.md`.
+  - If it does not exist → abort and inform the user.
+- **Active projects** — Bash `ls /Users/lsosnicki/obsidian/vault/work/projects/` to list all `.md` files, then Read every one of them.
+  - Extract from each: open checkboxes `- [ ]` (tasks to do), assigned people `[[@...]]`, frontmatter tags.
+  - If a project file does not exist — skip it, do not abort.
+- **Calendar** — `outlook_calendar_search` (date: the full target day, max_results: 20, timezone: Europe/Warsaw / CET/CEST).
+  - Save: title, time (HH:MM–HH:MM), whether the meeting is recurring (series), meeting description (if present). Do **not** save attendees.
+- **Emails** — `outlook_email_search` (last 24h, max_results: 10).
+  - Look only for emails requiring a reply or action. Ignore FYI/CC.
 
 ---
 
-## Step 4 — Detect overlooked tasks from projects
+## Step 3 — Detect overlooked tasks from projects
 
-Based on the loaded project files (Step 3), look for tasks that are easy to miss:
+Based on the loaded project files (Step 2), look for tasks that are easy to miss:
 - `- [ ]` checkboxes buried deep in sections (not at the top of the file)
 - Checkboxes with a date in their text that has already passed
 
@@ -61,44 +56,15 @@ Build a list of max **3–5 suggestions** — only those **not already** in the 
 
 ---
 
-## Step 5 — Fetch calendar and emails (M365 MCP)
+## Step 4 — Build the journal file
 
+Using the template and data gathered in Step 2:
 
-### Calendar
-```
-outlook_calendar_search
-- date: the full target day
-- max_results: 20
-- timezone: Europe/Warsaw (CET/CEST)
-```
-Save: title, time (HH:MM–HH:MM), whether the meeting is recurring (series), meeting description (if present). Do **not** save attendees.
-
-### Emails
-```
-outlook_email_search
-- last 24h
-- max_results: 10
-```
-Look only for emails requiring a reply or action. Ignore FYI/CC.
-
----
-
-## Step 6 — Build the journal file
-
-### 6a — Load template from vault
-
-**Always** load the current template before building the file, and use it to structure the day:
-
-Use the Read tool
-→ /Users/lsosnicki/obsidian/vault/work/resources/tools/obsidian/templates/daily.md
-
-- Use the loaded template as the base structure of the journal file.
+- **New file**: use the loaded template as the base structure of the journal file.
+- **Existing file**: keep the file's current structure as-is; use the template only as a reference for which sections/placeholders should exist, so you know what to fill in — do not reorder or replace existing headings.
 - If the template contains `{{date}}` or other Obsidian variables — substitute them with the correct value (e.g. date in `YYYY-MM-DD` format).
-- If the template file does not exist → abort and inform the user.
 
-### 6b — Populate the template with data
-
-Fill in sections with data from steps 3–5. If the journal file already existed (Step 2) — preserve the user's existing notes (Notes, Reflections, Summary sections, manual entries). Only fill in empty placeholders or sections with no content yet. Do not overwrite anything that looks like a manual entry.
+Fill in sections with data from Steps 2–3. If the journal file already existed, preserve the user's existing notes (Notes, Reflections, Summary sections, manual entries). Only fill in empty placeholders or sections with no content yet. Do not overwrite anything that looks like a manual entry.
 
 ### Rules for the "My Day" section (`### My Day`)
 
@@ -125,13 +91,13 @@ Fill in sections with data from steps 3–5. If the journal file already existed
 
 ---
 
-## Step 7 — Save the file
+## Step 5 — Save the file
 
 Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 ---
 
-## Step 8 — Confirm and summarize
+## Step 6 — Confirm and summarize
 
 ```
 ✅ Daily plan saved:
@@ -151,4 +117,4 @@ Also display a **brief chat summary**: meetings + top tasks for today.
 - **Project file does not exist** → skip without error
 - **Journal file already has content** → preserve it, fill only placeholders
 - **Planning for tomorrow** → use tomorrow's calendar, projects unchanged
-- **Vault unavailable** → display plan in chat, inform user that saving failed
+- **Vault unavailable** → print the full plan content to chat/stdout (not just an error message) and inform the user that saving failed, so the plan isn't lost even if nothing gets written to disk
