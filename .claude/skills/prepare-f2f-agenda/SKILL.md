@@ -50,7 +50,7 @@ For each matching file, read it and note:
 - Anything in `### Decisions` / `### Issues` / `### Questions` that looks unresolved or recent
 
 ### 2c — Recent journal mentions
-`grep -rl "@handle" journal/*.md` (or the person's plain name if the handle doesn't appear).
+`grep -rl "@handle" journal/*.md`. Also run `grep -rl "<FirstName>" journal/*.md` using the person's first name (from their person-note title, project frontmatter, or the meeting title convention `FirstName / Łukasz`) — older meeting notes may predate the `[[@handle]]` linking convention and won't match the handle grep alone.
 
 Read matching files — look for:
 - Past meeting notes headed with this person's name (e.g. `### Name / Łukasz [[@handle]]`)
@@ -59,6 +59,8 @@ Read matching files — look for:
 
 ### 2d — Today's calendar entry (optional context)
 If a meeting with this person is already in today's journal (`### <title> [[@handle]]`) or can be found via `Microsoft 365:outlook_calendar_search`, note its title/time — this becomes the meeting to attach the saved note to in Step 5.
+
+If that journal heading **already has content under it** (not just a bare title/time), treat that content as additional input for Step 2c rather than an empty slot — it may be earlier prep or partial notes for the same meeting. Do not silently overwrite it later in Step 5; see the Edge Cases table.
 
 ---
 
@@ -119,3 +121,4 @@ After presenting the agenda, ask:
 | `przepis_na_f2f.md` missing or restructured | Fall back to the generic shape: operational topics → wins → challenges → feedback both ways |
 | No meeting with this person found today (calendar or journal) | Still offer to save — create a new `### <name>` heading without a time |
 | Multiple projects link to the person | Include all of them, grouped under "Tematy operacyjne" |
+| Today's meeting heading already has content under it | Don't overwrite. Show the existing content to the user alongside the new agenda and ask: append the new agenda below the existing content, replace it, or skip saving |
