@@ -83,6 +83,16 @@ tags:
 - **Kanban**: only `## Doing` column matters; `- [ ]` = active, `- [x]` = done today
 - **`#claude-reviewed` tag**: presence means skip the file — never re-process it
 - **Archive**: manual only, no skill does this automatically. Observed pattern: project/area files → `archive/<year>/`; inactive people → `archive/people/`; team-specific docs → `archive/<team-name>/`; kanban boards snapshotted as `<board-name>-archive-<year>.md`. Journal archive is flat (`journal/archive/YYYY-MM-DD.md`, no year subfolder) — inconsistent with the others but that's the real state.
+- **Tags live in two places**: personal project files often tag via frontmatter (`tags:\n  - firearms`), while kanban boards mix in inline `#hashtag` text on the same line as the item. A tag-based search/analysis must check both — grepping only for `#hashtag` will silently miss frontmatter-tagged files.
+- **Voice-dictated meeting notes can be garbled**: raw dictated text occasionally mis-transcribes meeting titles, acronyms, or proper nouns (e.g. a meeting title heard as unrelated words, or a topic word garbled into something that looks like a real acronym). When the dictated content doesn't cleanly match the calendar event or vault content, flag the mismatch to the user instead of silently guessing.
+
+## Automation
+
+A launchd job runs the daily flow unattended on weekdays:
+
+- `~/Library/LaunchAgents/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-review-journal, then run skill obsidian-plan-my-day."` Mon–Fri (currently 08:00).
+- Logs: `~/Library/Logs/obsidian-plan-my-day.log`
+- After editing the plist, reload it: `launchctl unload` then `launchctl load` the file.
 
 ## MCP integrations
 
