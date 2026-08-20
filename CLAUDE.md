@@ -47,7 +47,7 @@ Four skills drive the main workflows. Each skill file is a detailed step-by-step
 | `obsidian-add-to-journal` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
 | `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file from calendar + emails + kanban |
 | `obsidian-review-journal` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
-| `obsidian-review-project` | "review project", "sprawdź projekt", "przejrzyj projekt" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
+| `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
 
 ## Journal file format

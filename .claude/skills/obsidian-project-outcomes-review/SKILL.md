@@ -1,14 +1,16 @@
 ---
-name: obsidian-review-project
+name: obsidian-project-outcomes-review
 description: >
   Reviews an Obsidian project file across three dimensions: language quality,
   outcomes quality, and next actions relevance. Use this skill whenever the user
   wants to review a project file, says things like "review my project", "check project file",
   "sprawdź projekt", "przejrzyj projekt", "review project in obsidian", "audit project file",
-  "check outcomes", "check my next actions", or provides a path to a project .md file and
-  asks for review or improvement. Also trigger when the user asks to improve, validate,
-  or upgrade a project note in Obsidian. Always use this skill — not generic file-reading —
-  when the request involves reviewing a project file in the vault.
+  "check outcomes", "check my next actions", "wygeneruj outcome dla projektu",
+  "wygeneruj outcome", "generate outcome for project", or provides a path to a project
+  .md file and asks for review or improvement. Also trigger when the user asks to
+  improve, validate, upgrade, or generate/write an outcome for a project note in
+  Obsidian. Always use this skill — not generic file-reading — when the request
+  involves reviewing or generating outcomes for a project file in the vault.
 ---
 
 # Obsidian Review Project
@@ -36,8 +38,19 @@ Match by filename (case-insensitive, ignore dashes/spaces). If ambiguous → ask
 
 Read the file with the Read tool: `<resolved_path>`
 
-Extract from frontmatter:
-- Any backlinks `[[...]]` in the file body → note them for Phase 3
+Extract, for use in Phase 3:
+- Any `[[...]]` backlinks in the file **body**
+- Any `[[...]]` links in **frontmatter** fields (`owner`, `co-owner`, `EM`, `PM`, `SEM`, `members`, `team`)
+
+### Step 0b — Quick check for a project-level status signal
+
+Before evaluating anything, do a cheap check for whether this project has been explicitly paused/stopped/deprioritized:
+
+`grep -il "<project-name>\|\[\[<project-name>\]\]" journal/*.md`
+
+Skim any matches for stop/pause language (e.g. "stopujemy", "wstrzymujemy", "zawieszamy", "on hold", "pausing", "deprioritized"). This is a fast pre-check, not the full journal read (that happens in Phase 3b-1) — its only purpose is to carry a `paused: yes/no + source` flag into Phase 2, since Phase 2 runs before Phase 3.
+
+If found → carry this forward and surface it before Phase 2's evaluation (see Step 2a) and again as the headline of Phase 3 (see Step 3c).
 
 ---
 
@@ -87,12 +100,14 @@ Read the full reference before this phase:
 
 Look for a `### Outcomes` section (also accept `### Cele`, `### Wyniki`, `### Rezultaty`).
 
-**If section is missing:**
-> "This project has no Outcomes section. I'll help you create one — see the questions below."
+**If section is missing, OR exists but contains only placeholder text (`todo`, `TBD`, `outcomes`, or empty):**
+> "This project has no Outcomes section yet. I'll help you create one — see the questions below."
 Jump to Step 2c.
 
-**If section exists:**
+**If section exists with real content:**
 → Read its contents and proceed to Step 2b.
+
+**If Step 0b found a project-level pause/stop signal**, say so before evaluating anything: "Note: the journal indicates this project may be paused (<source>) — evaluating the Outcomes below anyway, but flag if this project should be archived instead of reviewed." Do not silently validate outcomes for a project the journal says is on hold.
 
 ### Step 2b — Evaluate existing outcomes
 
@@ -154,42 +169,53 @@ On "skip" → move to Phase 3 without saving.
 
 **Goal:** Cross-reference tasks against journal and related files to surface stale, duplicate, or missing actions.
 
-### Step 3a — Read current next actions
+### Step 3a — Read current next actions, decisions, and questions
 
-Find the `### Next Actions` section (also accept `### Następne kroki`, `### TODO`, `### Tasks`).
+Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `### Decisions`, and `### Questions`.
 
 Extract:
-- `- [ ]` open tasks
-- `- [x]` completed tasks (for context only)
+- `- [ ]` open tasks, `- [x]` completed tasks (for context only)
+- Open decisions/questions from those sections
+
+**Intra-file consistency check:** compare `### Next Actions`, `### Questions`, and `### Decisions` against each other for content duplicated across sections within this same file (e.g. the same question listed both as an open Next Action and under Questions). Flag any duplication found — this is separate from the journal/backlink cross-referencing below.
 
 ### Step 3b — Gather context from vault
 
 Run these lookups in parallel:
 
-**3b-1 — Recent journal entries (last 7 days)**
+**3b-1 — Recent journal entries (last 7 calendar days)**
 
-Use Bash `ls /Users/lsosnicki/obsidian/vault/journal/`.
-Read the 7 most recent journal files. Search for:
-- Mentions of this project (by name or filename)
+Use Bash `ls /Users/lsosnicki/obsidian/vault/journal/`. Read whichever journal files fall in the last 7 calendar days (the vault may not have a file for every day — read what exists in that window, don't assume 7 contiguous files). Search for:
+- Mentions of this project (by name, filename, or `[[wikilink]]`)
 - Any `- [ ]` tasks that reference this project
 - Any decisions or blockers logged in meetings
+- **A project-level status signal**: an explicit decision to pause, stop, deprioritize, or archive the whole project (distinct from a single task update) — if Step 0b already found one, confirm/expand on it here
 
 **3b-2 — Backlinked files**
 
-For each `[[link]]` found in the project file body, use the Read tool on `/Users/lsosnicki/obsidian/vault/<resolved_link>.md`.
+For each `[[link]]` found in the project file body **and** each `[[@handle]]`/`[[~team]]` link found in frontmatter (Phase 0), use the Read tool on `/Users/lsosnicki/obsidian/vault/<resolved_link>.md`.
 Look for tasks or updates that relate back to this project.
 
 ### Step 3c — Analyze and propose upgrades
 
-Compare gathered context against current `### Next Actions`. Identify:
+**If a project-level pause/stop/deprioritize signal was found (Step 0b or 3b-1), lead with it** — before the per-task diff, as its own headline, e.g.:
+```
+🛑 Project-level signal: journal/2026-08-19.md indicates work on this project has been stopped
+   (message from [[@mochrymowicz]]). Consider archiving this project instead of reviewing
+   its Next Actions below.
+```
+Do not bury this as a "Priority signal" bullet inside the task diff — it changes the meaning of everything below it.
+
+Then compare gathered context against current `### Next Actions`. Identify:
 
 | Finding | Example |
 |---|---|
 | **Stale task** | Task was already discussed and resolved in journal, but still open |
-| **Duplicate task** | Same task appears in a related file |
+| **Duplicate task (cross-file)** | Same task appears in a related/backlinked file |
+| **Duplicate content (same file)** | Same question/task appears in both Next Actions and Questions/Decisions (from Step 3a) |
 | **Missing task** | Journal mentions a follow-up that hasn't been added to the project |
 | **Outdated task** | Decision in journal changed the scope or made the task irrelevant |
-| **Priority signal** | Journal mentions a blocker or deadline that should be reflected |
+| **Priority signal** | Journal mentions a blocker or deadline that should be reflected (task-level, not project-level) |
 
 ### Step 3d — Present proposed changes
 
@@ -237,11 +263,15 @@ Phase 3 — Next Actions: N changes applied / Skipped
 | Situation | Behaviour |
 |---|---|
 | File not found | Ask user to confirm path or pick from list |
-| No `### Outcomes` section | Skip directly to interview (Step 2c) |
+| No `### Outcomes` section, or section has only placeholder text (`todo`, `TBD`, empty) | Skip directly to interview (Step 2c) |
 | No `### Next Actions` section | Note it, offer to create the section |
+| User says "generate outcome for X" / "wygeneruj outcome dla projektu X" | Treat as "only check outcomes" — Phase 2 only |
+| Project is a personal project (`my/projects/`, tags like `firearms`, `mind-n-body`, hobby-related) | In Step 2c, swap the "business impact" question for "Why does this matter to you personally — safety, skill, health, relationships?"; don't require a business framing |
 | Journal dir empty / no recent entries | Skip journal lookup, continue with backlinks |
 | Backlinked file not found on disk | Skip with a note: "[[X]] not found in vault" |
 | File is in English only | Skip Polish diacritics check |
-| User says "only check language" | Run Phase 1 only, skip 2 and 3 |
-| User says "only check outcomes" | Run Phase 2 only |
-| User says "only check tasks" | Run Phase 3 only |
+| User says "only check language" | Run Phase 0, then Phase 1 only |
+| User says "only check outcomes" | Run Phase 0, then Phase 2 only |
+| User says "only check tasks" | Run Phase 0, then Phase 3 only |
+
+*Phase 0 (including Step 0b's pause-signal check) always runs first regardless of which phase(s) the user scoped to — it's not one of the "three phases," it's the shared setup they all depend on.*

@@ -93,3 +93,16 @@ Use these during Phase 2 (outcomes review) to help the user articulate real outc
 4. "How would you know in 3 months that this project worked? What would you observe?"
 5. "Is there a number, a rate, or a before/after comparison that would tell the story?"
 6. "What's the cost to the business if this project doesn't happen?"
+
+### Personal-project variant
+
+For projects under `my/projects/` (hobbies, personal goals — firearms, sport, family, finance, learning), question 6 doesn't apply. Ask instead:
+6a. "Why does this matter to you personally — safety, skill, health, a relationship, peace of mind?"
+
+The beneficiary in question 1 is usually "I/me" or a family member, not a customer/team — that's fine, still require a concrete behavioral change and an observable signal (questions 2–5 still apply as-is).
+
+| Output (❌) | Outcome (✅) |
+|---|---|
+| Complete CQB course with Tactical Tribe | I can perform room-entry and target-discrimination drills safely and confidently, verified by passing the course's practical assessment |
+| Get KPP (first aid) certificate | I can administer first aid during a training incident without waiting on someone else |
+| Buy an AR-15 | I can compete in the long-gun class without borrowing equipment |
