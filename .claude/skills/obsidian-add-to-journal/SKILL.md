@@ -91,8 +91,9 @@ Organise the note as a clean bullet-point list:
 ...
 ```
 
-> **Action items do NOT go into the journal note** — they are saved directly to project files (Step 5).  
-> Exception: if no project match was found → action item goes at the end of the note as `#todo` (see Edge Cases).
+> **Action items do NOT go into the journal note as checkboxes** — the actionable checkbox is saved directly to the project file (Step 5).
+> - If it **was** saved to a project → also add a plain, non-checkbox bullet for it in the journal note (see 5c), so the journal keeps a readable record of what was discussed.
+> - If **no** project match was found, or the matched project file has no `### Next Actions` section → the item goes at the end of the note as a checkbox marked `#todo` instead (see Edge Cases).
 
 ---
 
@@ -120,20 +121,33 @@ For each action item, try to match a project:
 
 3. **No matching file found** → mark as `#todo` (see Edge Cases).
 
-### 5b — Append action items to project file
+### 5b — Check for a `### Next Actions` section
 
-Read the project file with the Read tool.
+Read the matched project file with the Read tool and check whether it contains a heading matching `Next Actions` (case-insensitive, keyword match — e.g. `### Next Actions`).
 
-Append action items at the end of the file as a block:
+- **Section present** → continue to 5c.
+- **Section absent** → treat this the same as "no matching file found": do not touch the project file. The action item goes into the journal note instead, marked `#todo` (see Edge Cases).
+
+### 5c — Append action items to the `Next Actions` list
+
+Append each action item to the **end of the existing `### Next Actions` list** — i.e. as the last item(s) before the next heading. Do not create a separate dated block, and do not include the meeting title or date.
 
 ```markdown
-
-#### Action items — <Meeting title> (<YYYY-MM-DD>)
-- [ ] <action item 1> ← @person or unassigned
-- [ ] <action item 2>
+- [ ] <action item 1> ← @person or unassigned #todo
+- [ ] <action item 2> #todo
 ```
 
-Save with the Write tool (full file with appended block).
+Save with the Write tool (full file, item(s) inserted at the end of the Next Actions list).
+
+### 5d — Mirror the action item into the journal note (no checkbox, no `#todo`, no project link)
+
+For every action item successfully appended in 5c, add a corresponding **plain bullet** to the journal note's bullet list built in Step 4b — just the action item text, nothing else:
+
+```markdown
+- <action item>
+```
+
+This is purely informational — it lets the journal read as a complete record of the meeting even though the actionable checkbox itself lives in the project file. Do not mark these bullets `#todo`, do not turn them into checkboxes, and do not append a `[[project-name]]` link (the project-level heading link from Step 6 already covers that).
 
 ---
 
@@ -231,4 +245,5 @@ Also **display the edited note in the chat** (the bullet-point version), so the 
 | User provided a past date | Use that date; do not ask for confirmation |
 | Action item — project unknown / ambiguous | Append at the end of the journal note as: `- [ ] <content> #todo` |
 | Action item — project file does not exist on disk | Same as above — append as `#todo` in journal and inform the user |
+| Action item — matched project file has no `### Next Actions` section | Same as above — append as `#todo` in journal, do not create a `Next Actions` section |
 | No action items in notes | Skip Step 5 entirely |
