@@ -43,12 +43,14 @@ Run these lookups in parallel where possible:
 
 ### 2a — The project file itself (already read in Step 1)
 Extract, section by section:
-- `### Outcomes` — the goal, so the agenda stays anchored to it. If the section is missing entirely (not just placeholder text), fall back to the project's top-level description or a linked strategy doc from `### Resources`, and say explicitly that no Outcomes section exists yet
+- `### Outcomes` — the goal, so the agenda stays anchored to it. If the section is missing entirely (not just placeholder text), fall back to the project's top-level description or a linked strategy doc from Resources, and say explicitly that no Outcomes section exists yet
 - `### Next Actions` — open (`- [ ]`) items, especially any with an owner tag
-- `### Decisions` — anything unresolved (placeholder text like `todo`/`decisions` means none logged yet — skip it)
-- `### Questions` — open questions
-- `### Issues` — open issues/blockers
-- `### Resources` — links (Jira, Confluence, SharePoint). List them for reference; do not fetch external URLs unless the user explicitly asks
+- Decisions — anything unresolved (placeholder text like `todo`/`decisions` means none logged yet — skip it)
+- Questions — open questions
+- Issues — open issues/blockers
+- Resources — links (Jira, Confluence, SharePoint). List them for reference; do not fetch external URLs unless the user explicitly asks
+
+Decisions/Questions/Issues/Resources: match by keyword, not a fixed heading level. The current project template nests Decisions/Questions/Issues as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Action Log` parent, with `### Resources` moved earlier — but older project files still use all of these as flat `###` sections. Handle both.
 
 ### 2b — People and teams linked to the project
 From frontmatter (`owner`, `co-owner`, `EM`, `PM`, `SEM`, `members`, `team`) and any `[[@handle]]` mentions in the body. For each, note their role — this tells you who should be in the room / whose open items matter here.
@@ -60,7 +62,7 @@ Plain-text names in the body with no `[[@handle]]` link (e.g. an external contac
 
 Read matching files — look for:
 - Past meeting notes about this project
-- Decisions or blockers logged that haven't made it into the project file's `### Decisions`/`### Issues` yet (a gap worth flagging)
+- Decisions or blockers logged that haven't made it into the project file's Decisions/Issues section yet (a gap worth flagging)
 - Action items about this project that aren't yet in `### Next Actions`
 
 ### 2d — Today's calendar entry (optional context)
@@ -75,14 +77,14 @@ If that journal heading **already has content under it**, treat it as additional
 There is no fixed template — derive the shape from what Step 2 actually found. A typical shape:
 
 1. **Status / recap** — current state vs. `### Outcomes`, recent progress from journal (2c)
-2. **Decyzje do podjęcia** — open `### Decisions` and any Next Actions that are really decisions in disguise
-3. **Otwarte pytania** — `### Questions`
-4. **Blokery** — `### Issues`
+2. **Decyzje do podjęcia** — open Decisions and any Next Actions that are really decisions in disguise
+3. **Otwarte pytania** — Questions
+4. **Blokery** — Issues
 5. **Next steps** — remaining `### Next Actions`, with the linked people (2b) who'd own each
 
 Skip any of these sections if Step 2 found nothing for it — don't invent content. Cite the source section inline, e.g.:
 ```
-- Decyzja: czy przechodzimy na rozwiązanie off-the-shelf, czy zostaje CAG jako open source? (### Decisions, [[cag-upgrade]])
+- Decyzja: czy przechodzimy na rozwiązanie off-the-shelf, czy zostaje CAG jako open source? (Decisions, [[cag-upgrade]])
 ```
 
 If a journal mention (2c) surfaced something not yet reflected in the project file (e.g. a decision made verbally but not logged), flag it explicitly so the user can decide whether to update the project file too — don't fold it in silently.

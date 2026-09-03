@@ -171,13 +171,13 @@ On "skip" → move to Phase 3 without saving.
 
 ### Step 3a — Read current next actions, decisions, and questions
 
-Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `### Decisions`, and `### Questions`.
+Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `Decisions`, and `Questions` — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Action Log` parent, but older project files still use them as flat `###` sections. Handle both.
 
 Extract:
 - `- [ ]` open tasks, `- [x]` completed tasks (for context only)
 - Open decisions/questions from those sections
 
-**Intra-file consistency check:** compare `### Next Actions`, `### Questions`, and `### Decisions` against each other for content duplicated across sections within this same file (e.g. the same question listed both as an open Next Action and under Questions). Flag any duplication found — this is separate from the journal/backlink cross-referencing below.
+**Intra-file consistency check:** compare `Next Actions`, `Questions`, and `Decisions` against each other for content duplicated across sections within this same file (e.g. the same question listed both as an open Next Action and under Questions). Flag any duplication found — this is separate from the journal/backlink cross-referencing below.
 
 ### Step 3b — Gather context from vault
 
