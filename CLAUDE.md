@@ -6,6 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an Obsidian vault + Claude Code skills configuration. The actual note content lives in `./vault/` (on disk, outside this git repo). Claude Code skills automate workflows that read and write to that vault.
 
+## Way of Working
+
+The vault follows a loose Capture → Organize → Distill → Express flow (CODE), each stage handled by different skills:
+
+- **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-save-to-inbox`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-add-to-journal`, daily tasks via `obsidian-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
+- **Organize** — captured material is filed into the PARA structure (`work/`, `my/`): action items move out of the journal into the matching project file; completed/paused items eventually move to `archive/` (manual, no skill does this automatically).
+- **Distill** — `obsidian-review-journal` cleans language and writes a `## Summary` per day; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
+- **Express** — distilled context becomes something usable in a real conversation: `prepare-f2f-agenda` and `prepare-meeting-agenda` turn accumulated notes into a concrete meeting agenda.
+
+Consistency in capturing and reviewing matters more than any single note being polished or perfectly filed — see `inbox/the-code-system-my-way.md`.
+
 ## Vault structure
 
 Both `work/` and `my/` are organised using the **PARA method** (Projects → Areas → Resources → Archive):
@@ -40,7 +51,7 @@ Both `work/` and `my/` are organised using the **PARA method** (Projects → Are
 
 ## Skills (`.claude/skills/`)
 
-Four skills drive the main workflows. Each skill file is a detailed step-by-step spec that Claude must follow exactly:
+Seven skills drive the main workflows. Each skill file is a detailed step-by-step spec that Claude must follow exactly:
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
@@ -49,6 +60,8 @@ Four skills drive the main workflows. Each skill file is a detailed step-by-step
 | `obsidian-review-journal` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
+| `prepare-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
+| `prepare-meeting-agenda` | "prepare meeting agenda", "przygotuj agendę na spotkanie", "agenda na spotkanie o <project>" | Builds a proposed agenda for a project-related meeting from the project's own Outcomes/Next Actions/Decisions; offers to save as today's meeting note |
 
 ## Journal file format
 
