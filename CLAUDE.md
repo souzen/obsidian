@@ -24,7 +24,7 @@ Both `work/` and `my/` are organised using the **PARA method** (Projects → Are
 │   ├── projects/               # P — one .md file per active project
 │   ├── areas/
 │   │   ├── people/             # A — @name.md person notes
-│   │   ├── gokart/teams/       # A — team notes
+│   │   │   └── teams/          # A — team notes; subfolders per org grouping (gokart/, platform/, consumer/), plus top-level team files
 │   │   ├── platform/           # A — platform/devops domain
 │   │   └── tech/               # A — technical domain notes
 │   ├── resources/              # R — reference material, templates, PM docs
@@ -76,6 +76,7 @@ tags:
 - **Vault path**: always `~/obsidian/vault` (not the git repo root)
 - **Project links**: `[[project-name]]` in headings — the name is the project filename without `.md`
 - **People links**: `[[@handle]]` — handle = file name under `work/areas/people/`
+- **Team links**: `[[~team-slug]]` — team notes are named `~<slug>.md` under `work/areas/people/teams/` (recurse into subfolders). The `~` prefix, not the subfolder, is what identifies a team note.
 - **Person notes**: freeform, no fixed template — running task checkboxes (`- [ ]`/`- [x]`) about things to raise/follow up with that person, occasionally a loose `### Goals` section, plus inline `[[...]]` links to teams/projects. Many are empty. Don't impose headings or frontmatter that aren't already there.
 - **Action items**: saved to the matching project file, not left in the journal
 - **Language**: notes are mixed Polish/English; detect per-section, never translate

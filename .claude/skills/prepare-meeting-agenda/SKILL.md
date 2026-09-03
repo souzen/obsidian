@@ -22,7 +22,7 @@ in the vault, then optionally saves it as today's meeting note.
 **Vault:** `/Users/lsosnicki/obsidian/vault`
 **Projects:** `/Users/lsosnicki/obsidian/vault/work/projects/`
 **People:** `/Users/lsosnicki/obsidian/vault/work/areas/people/`
-**Teams:** `/Users/lsosnicki/obsidian/vault/work/areas/gokart/teams/`
+**Teams:** `/Users/lsosnicki/obsidian/vault/work/areas/people/teams/` (recurse into subfolders — team notes are named `~<slug>.md`)
 **Journal:** `/Users/lsosnicki/obsidian/vault/journal/`
 
 ---

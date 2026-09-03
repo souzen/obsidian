@@ -19,7 +19,7 @@ Builds a proposed 1:1/F2F agenda for a person, grounded in what's actually in th
 **Template:** `/Users/lsosnicki/obsidian/vault/work/resources/people-management/feedback/przepis_na_f2f.md`
 **People:** `/Users/lsosnicki/obsidian/vault/work/areas/people/`
 **Projects:** `/Users/lsosnicki/obsidian/vault/work/projects/`
-**Teams:** `/Users/lsosnicki/obsidian/vault/work/areas/gokart/teams/`
+**Teams:** `/Users/lsosnicki/obsidian/vault/work/areas/people/teams/` (recurse into subfolders — team notes are named `~<slug>.md`)
 **Journal:** `/Users/lsosnicki/obsidian/vault/journal/`
 
 ---
@@ -42,7 +42,9 @@ Run these lookups (in parallel where possible):
 Already read in Step 1. Extract any open (`- [ ]`) items — these are standing things to raise with this person.
 
 ### 2b — Projects and teams linked to this person
-`grep -rl "@handle" work/projects/ work/areas/gokart/teams/` (also check without the `@` in case of plain-text mentions).
+`grep -rl "@handle" work/projects/ work/areas/people/teams/` (also check without the `@` in case of plain-text mentions).
+
+Team notes are named `~<slug>.md` — that `~` prefix marks a match as a team rather than a project. The slug (filename without `~`/`.md`) is reused in Step 2c and in `[[~slug]]` links.
 
 For each matching file, read it and note:
 - Their role (owner, co-owner, EM, PM, SEM, member — from frontmatter)
@@ -52,10 +54,12 @@ For each matching file, read it and note:
 ### 2c — Recent journal mentions
 `grep -rl "@handle" journal/*.md`. Also run `grep -rl "<FirstName>" journal/*.md` using the person's first name (from their person-note title, project frontmatter, or the meeting title convention `FirstName / Łukasz`) — older meeting notes may predate the `[[@handle]]` linking convention and won't match the handle grep alone.
 
+If 2b found a team this person belongs to (EM/PM/SEM/member), also run `grep -ril "<team-slug>" journal/*.md` using that team's slug (from 2b) and its `[[~team-slug]]` wikilink form. Team-wide entries (reorgs, retros, incidents) often don't name the person directly and would otherwise be missed.
+
 Read matching files — look for:
 - Past meeting notes headed with this person's name (e.g. `### Name / Łukasz [[@handle]]`)
 - Action items assigned to or about this person
-- Any decisions/blockers logged that involve them
+- Any decisions/blockers logged that involve them or their team
 
 ### 2d — Today's calendar entry (optional context)
 If a meeting with this person is already in today's journal (`### <title> [[@handle]]`) or can be found via `Microsoft 365:outlook_calendar_search`, note its title/time — this becomes the meeting to attach the saved note to in Step 5.
