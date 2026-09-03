@@ -66,18 +66,18 @@ If that journal heading **already has content under it** (not just a bare title/
 
 ## Step 3 — Read the F2F template
 
-Read `work/resources/people-management/feedback/przepis_na_f2f.md`. Use its numbered structure (operational topics → wins/what went well → current challenges → feedback both ways) as the skeleton for the agenda. Preserve the time allocations if present; adapt them proportionally if the meeting is shorter/longer than the template assumes.
+Read `work/resources/people-management/feedback/przepis_na_f2f.md`. Its actual structure is 4 items with time allocations (for a 30-min f2f): (1) 5 min — Twoje sukcesy / co idzie dobrze w ostatnim tygodniu, (2) 15 min — aktualne wyzwania (co to jest, jakie podejście planujesz zastosować, moja perspektywa), (3) 5 min — feedback dla Ciebie, (4) 5 min — feedback dla mnie. There is no separate "operational topics" section — project/team status items belong inside item 2, as the substance of the "aktualne wyzwania" discussion. Use this exact 4-item skeleton; adapt the minute allocations proportionally if the meeting is shorter/longer than 30 min.
 
 ---
 
 ## Step 4 — Build and present the proposed agenda
 
-Map gathered context onto the template skeleton. Populate:
+Map gathered context onto the template's 4 items. Populate:
 
-1. **Tematy operacyjne** — open items from linked projects/teams that need a decision or status check (from 2b)
-2. **Sukcesy / co idzie dobrze** — leave as an open prompt for the person unless the vault clearly shows a recent win
-3. **Aktualne wyzwania** — unresolved issues/blockers/questions found in 2b/2c; open items from the person's own note (2a)
-4. **Feedback dla Ciebie / dla mnie** — leave as an open prompt (this is inherently conversational, not derivable from notes)
+1. **Sukcesy / co idzie dobrze (X min)** — leave as an open prompt for the person unless the vault clearly shows a recent win
+2. **Aktualne wyzwania (X min)** — open items from linked projects/teams that need a decision or status check (from 2b), plus unresolved issues/blockers/questions found in 2b/2c and open items from the person's own note (2a)
+3. **Feedback dla Ciebie (X min)** — leave as an open prompt
+4. **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes)
 
 For each topic pulled from a project or journal entry, cite the source inline so the user can verify, e.g.:
 ```
@@ -118,7 +118,7 @@ After presenting the agenda, ask:
 | Person handle not found in `work/areas/people/` | Ask the user to confirm the exact handle/filename |
 | Person note is empty | Continue — rely on projects/journal instead |
 | No projects/journal mentions found at all | Present a template-only agenda and say explicitly that no vault context was found |
-| `przepis_na_f2f.md` missing or restructured | Fall back to the generic shape: operational topics → wins → challenges → feedback both ways |
+| `przepis_na_f2f.md` missing or restructured | Fall back to the generic shape: wins → challenges → feedback both ways |
 | No meeting with this person found today (calendar or journal) | Still offer to save — create a new `### <name>` heading without a time |
-| Multiple projects link to the person | Include all of them, grouped under "Tematy operacyjne" |
+| Multiple projects link to the person | Include all of them, grouped under "Aktualne wyzwania" |
 | Today's meeting heading already has content under it | Don't overwrite. Show the existing content to the user alongside the new agenda and ask: append the new agenda below the existing content, replace it, or skip saving |
