@@ -50,7 +50,7 @@ Extract, section by section:
 - Issues — open issues/blockers
 - Resources — links (Jira, Confluence, SharePoint). List them for reference; do not fetch external URLs unless the user explicitly asks
 
-Decisions/Questions/Issues/Resources: match by keyword, not a fixed heading level. The current project template nests Decisions/Questions/Issues as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Action Log` parent, with `### Resources` moved earlier — but older project files still use all of these as flat `###` sections. Handle both.
+Decisions/Questions/Issues/Resources: match by keyword, not a fixed heading level. The current project template nests Decisions/Questions/Issues as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Log %% fold %%` parent, with `### Resources` moved earlier — but older project files still use all of these as flat `###` sections. Handle both.
 
 ### 2b — People and teams linked to the project
 From frontmatter (`owner`, `co-owner`, `EM`, `PM`, `SEM`, `members`, `team`) and any `[[@handle]]` mentions in the body. For each, note their role — this tells you who should be in the room / whose open items matter here.

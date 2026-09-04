@@ -171,7 +171,7 @@ On "skip" → move to Phase 3 without saving.
 
 ### Step 3a — Read current next actions, decisions, and questions
 
-Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `Decisions`, and `Questions` — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Action Log` parent, but older project files still use them as flat `###` sections. Handle both.
+Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `Decisions`, and `Questions` — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Log %% fold %%` parent, but older project files still use them as flat `###` sections. Handle both.
 
 Extract:
 - `- [ ]` open tasks, `- [x]` completed tasks (for context only)

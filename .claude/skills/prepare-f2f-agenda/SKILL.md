@@ -49,7 +49,7 @@ Team notes are named `~<slug>.md` — that `~` prefix marks a match as a team ra
 For each matching file, read it and note:
 - Their role (owner, co-owner, EM, PM, SEM, member — from frontmatter)
 - Open `### Next Actions` items, especially any already tagged to this person
-- Anything in Decisions / Issues / Questions that looks unresolved or recent — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Action Log` parent, but older project files still use them as flat `###` sections
+- Anything in Decisions / Issues / Questions that looks unresolved or recent — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Log %% fold %%` parent, but older project files still use them as flat `###` sections
 
 ### 2c — Recent journal mentions
 `grep -rl "@handle" journal/*.md`. Also run `grep -rl "<FirstName>" journal/*.md` using the person's first name (from their person-note title, project frontmatter, or the meeting title convention `FirstName / Łukasz`) — older meeting notes may predate the `[[@handle]]` linking convention and won't match the handle grep alone.
