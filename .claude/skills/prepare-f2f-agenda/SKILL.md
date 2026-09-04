@@ -78,10 +78,12 @@ Read `work/resources/people-management/feedback/przepis_na_f2f.md`. Its actual s
 
 Map gathered context onto the template's 4 items. Populate:
 
-1. **Sukcesy / co idzie dobrze (X min)** — leave as an open prompt for the person unless the vault clearly shows a recent win
-2. **Aktualne wyzwania (X min)** — open items from linked projects/teams that need a decision or status check (from 2b), plus unresolved issues/blockers/questions found in 2b/2c and open items from the person's own note (2a)
-3. **Feedback dla Ciebie (X min)** — leave as an open prompt
-4. **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes)
+- **Sukcesy / co idzie dobrze (X min)** — leave as an open prompt for the person unless the vault clearly shows a recent win
+- **Aktualne wyzwania (X min)** — open items from linked projects/teams that need a decision or status check (from 2b), plus unresolved issues/blockers/questions found in 2b/2c and open items from the person's own note (2a)
+- **Feedback dla Ciebie (X min)** — leave as an open prompt
+- **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes)
+
+Output the agenda as a bullet list (`-`), not a numbered list — including when saving it into the journal (Step 5).
 
 For each topic pulled from a project or journal entry, cite the source inline so the user can verify, e.g.:
 ```

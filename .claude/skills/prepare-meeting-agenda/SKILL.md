@@ -76,11 +76,13 @@ If that journal heading **already has content under it**, treat it as additional
 
 There is no fixed template — derive the shape from what Step 2 actually found. A typical shape:
 
-1. **Status / recap** — current state vs. `### Outcomes`, recent progress from journal (2c)
-2. **Decyzje do podjęcia** — open Decisions and any Next Actions that are really decisions in disguise
-3. **Otwarte pytania** — Questions
-4. **Blokery** — Issues
-5. **Next steps** — remaining `### Next Actions`, with the linked people (2b) who'd own each
+- **Status / recap** — current state vs. `### Outcomes`, recent progress from journal (2c)
+- **Decyzje do podjęcia** — open Decisions and any Next Actions that are really decisions in disguise
+- **Otwarte pytania** — Questions
+- **Blokery** — Issues
+- **Next steps** — remaining `### Next Actions`, with the linked people (2b) who'd own each
+
+Output the agenda as a bullet list (`-`), not a numbered list — including when saving it into the journal (Step 4).
 
 Skip any of these sections if Step 2 found nothing for it — don't invent content. Cite the source section inline, e.g.:
 ```
