@@ -53,13 +53,13 @@ Sections to **skip** (do not modify their content):
 - Inline tags (`#tag`) and wikilinks (`[[...]]`) — preserve as-is within text
 
 Sections to **process** (improve language):
-- `Reflections` — skip if empty
+- `Notes` — narrative text and bullet lists about the day. Nested as `#### Notes` under a `### Journal %% fold %%` parent heading in the current template (the parent heading itself has no content — descend into it the same way you descend into `#### Title (HH:MM–HH:MM)` subheadings under `### Meetings`). Older files may still have this as a flat `### Notes` section instead (or nested under a `### Notes %% fold %%` parent, from an earlier revision of the template).
+- `Reflections` — skip if empty. Nested as `#### Reflections` under the same `### Journal` parent in the current template; older files may still have it as a flat `### Reflections` section.
 - `Summary` — skip if empty (will be populated in Step 5)
-- `Notes` — all narrative text and bullet lists
 - `Meetings` — descriptive text under meeting subheadings (**not** the meeting titles or times in `### Title (HH:MM–HH:MM)` format)
 - Any other sections containing narrative text
 
-> **Note:** Section names may vary between files (e.g. `Meetings` without emoji, `Notes` vs `Other Notes`). Match sections by keyword, not exact string.
+> **Note:** Section names may vary between files (e.g. `Meetings` without emoji, `Notes`/`Daily` naming, older flat vs. newer nested structure). Match sections by keyword, not exact string or heading level.
 
 ### 2b — Detect section language
 

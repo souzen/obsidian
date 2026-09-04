@@ -56,7 +56,7 @@ Seven skills drive the main workflows. Each skill file is a detailed step-by-ste
 | Skill | Trigger phrases | What it does |
 |---|---|---|
 | `obsidian-add-to-journal` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
-| `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file from calendar + emails + kanban |
+| `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
 | `obsidian-review-journal` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
@@ -72,16 +72,14 @@ Daily notes follow this structure (populated by the `plan-my-day` skill using th
 tags:
   - claude-reviewed   # added by review skill; skip file if present
 ---
-## Summary        # written by review skill; placed first
+### Summary           # written by review skill; placed first, right after frontmatter
 
-## My Day         # 3–7 task checkboxes; leave untouched during review
+### Meetings          # #### Title [[project-link]] subsections
+                       # format: #### Meeting Title (HH:MM–HH:MM)
 
-## Meetings       # ### Title [[project-link]] subsections
-                     # format: ### Meeting Title (HH:MM–HH:MM)
-
-## Notes
-
-## Reflections
+### Journal %% fold %% # fold-wrapper heading; no content of its own
+    #### Notes          # narrative notes about the day
+    #### Reflections     # random reflections
 ```
 
 ## Key conventions
