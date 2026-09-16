@@ -38,8 +38,8 @@ This step only establishes the skeleton — actual data gets filled in during St
 ## Step 3 — Gather all inputs (in parallel)
 
 - **Calendar** — `outlook_calendar_search` (date: the full target day, max_results: 20, timezone: Europe/Warsaw / CET/CEST).
-  - Save: title, time (HH:MM–HH:MM), whether the meeting is recurring (series), meeting description (if present), attendees, and whether you're the organizer (`isOrganizer`).
-  - Attendees are used only for the F2F detection in Step 4; `isOrganizer` only for the project-meeting detection in Step 5 — the Meetings section itself never persists either (see Step 6).
+  - Save: title, time (HH:MM–HH:MM), whether the meeting is recurring (series), meeting description (if present), and attendees.
+  - Attendees are used only for the F2F detection in Step 4 — the Meetings section itself never persists either (see Step 6).
 
 ---
 
@@ -57,16 +57,20 @@ Carry each built agenda (keyed by handle) — and each unresolved attendee email
 
 ---
 
-## Step 5 — Detect project meetings you organize and generate agendas
+## Step 5 — Generate agendas for non-company-wide meetings
 
-For each calendar meeting from Step 3 that you organize (`isOrganizer: true`) and that Step 4 did **not** already claim as a confirmed F2F:
+For each calendar meeting from Step 3 that Step 4 did **not** already claim as a confirmed F2F:
 
-- **Resolve the project**: `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — same rule as `obsidian-add-to-journal` Step 5a / `prepare-meeting-agenda` Step 1.
-  - Match found → confirmed project meeting.
-  - No match → not a detected project meeting. Treat it as a normal meeting in Step 6; this is expected and normal for most organizer meetings (demos, reviews, ad hoc syncs) — no breadcrumb needed here, unlike Step 4's unresolved-email case, since there's no single missing identifier to fix.
-- **For each confirmed project meeting**: run `prepare-meeting-agenda`'s Step 2 (gather context) and Step 3 (build agenda) for that project. **Skip its Step 4 confirmation** — same reasoning as Step 4's F2F agendas: this skill runs unattended, so write the agenda directly rather than asking "should I save?".
+- **Detect company-wide meetings**: the title contains a company-wide keyword (case-insensitive) — `All Hands`, `Town Hall`, `Kickoff`, `Company`, `Ogólne`, `Cała firma`.
+  - Match → company-wide meeting. Skip the rest of this step for it — treat it as a normal meeting in Step 6, even if its title also happens to match a project filename. Never run `prepare-meeting-agenda` for a company-wide meeting.
+  - No match → continue below; run `prepare-meeting-agenda` for every one of these, whether or not it matches a project.
+- **Resolve the project (`prepare-meeting-agenda` Step 1)**: `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — same rule as `obsidian-add-to-journal` Step 5a.
+  - Match found → confirmed project meeting. Run `prepare-meeting-agenda`'s Step 2 (gather context) and Step 3 (build agenda) in full, project file included.
+  - No match → no project file to ground the agenda in. Skip 2a (project file) and 2b (people/teams from project frontmatter); still run 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). Build the agenda from whatever 2c/2d surface — if both come up empty, treat it as a normal meeting in Step 6 (no agenda, no breadcrumb; this is expected for one-off syncs with no history).
+- **Skip `prepare-meeting-agenda`'s Step 1 user-confirmation prompt** for the no-match case too — this skill runs unattended, so never ask the user to confirm/pick a filename; a miss just means no project context, not a blocker.
+- **Skip its Step 4 confirmation** — same reasoning as Step 4's F2F agendas: this skill runs unattended, so write the agenda directly rather than asking "should I save?".
 
-Carry each built agenda (keyed by meeting) into Step 6 for insertion under that meeting's heading.
+Carry each built agenda (keyed by meeting) into Step 6 for insertion under that meeting's heading. When a project was matched, append `[[project-name]]` after the heading (as before); when none was matched, the heading gets no project link.
 
 ---
 
@@ -96,7 +100,7 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–5. If the journ
   jaskoczylas@inpost.pl
   ```
   This is a breadcrumb for the user to create/fix the matching person file — not something later steps or skills should try to resolve automatically.
-- **Detected project meetings you organize (Step 5)** → append `[[project-name]]` after the heading, then insert the generated agenda bullets directly under it — same bullet format `prepare-meeting-agenda` produces
+- **Meetings with a generated agenda (Step 5)** → insert the agenda bullets directly under the heading, same bullet format `prepare-meeting-agenda` produces; append `[[project-name]]` after the heading only if a project was matched, otherwise the heading gets no link
 
 ---
 
@@ -113,7 +117,7 @@ Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 📅 /Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md
 📆 Meetings: <N>
 🤝 F2F agendas generated: <N>
-📋 Project meeting agendas generated: <N>
+📋 Meeting agendas generated: <N>
 ```
 
 Also display a **brief chat summary**: meetings for today.
@@ -124,7 +128,8 @@ Also display a **brief chat summary**: meetings for today.
 
 - **No M365 access** → create file with empty Meetings section, add `⚠️ Could not fetch calendar`; skip Steps 4–5 (no calendar data to detect F2Fs or project meetings from)
 - **1:1-shaped meeting with no matching person file** → treat as a normal meeting, but still surface the unresolved email below the heading (Step 6); do not block the rest of the plan on it
-- **Organizer meeting title doesn't match any project** → treat as a normal meeting (Step 6), no breadcrumb — this is the common case, not an error
+- **Meeting title doesn't match any project** → still attempt a reduced agenda from journal mentions + calendar description (Step 5); only fall back to a normal meeting (Step 6, no breadcrumb) if that yields nothing either — this is expected for one-off syncs with no history, not an error
+- **Company-wide meeting title also happens to match a project filename** → still treat as a normal meeting (Step 6); company-wide detection wins, no `prepare-meeting-agenda` run
 - **Journal file already has content** → preserve it, fill only placeholders
 - **Planning for tomorrow** → use tomorrow's calendar
 - **Vault unavailable** → print the full plan content to chat/stdout (not just an error message) and inform the user that saving failed, so the plan isn't lost even if nothing gets written to disk
