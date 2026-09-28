@@ -72,6 +72,8 @@ If that journal heading **already has content under it** (not just a bare title/
 
 Read `work/resources/people-management/feedback/przepis_na_f2f.md`. Its actual structure is 4 items with time allocations (for a 30-min f2f): (1) 5 min — Twoje sukcesy / co idzie dobrze w ostatnim tygodniu, (2) 15 min — aktualne wyzwania (co to jest, jakie podejście planujesz zastosować, moja perspektywa), (3) 5 min — feedback dla Ciebie, (4) 5 min — feedback dla mnie. There is no separate "operational topics" section — project/team status items belong inside item 2, as the substance of the "aktualne wyzwania" discussion. Use this exact 4-item skeleton; adapt the minute allocations proportionally if the meeting is shorter/longer than 30 min.
 
+The template also has a `## Feedback` section with standing prompts for items 3/4: reference `[[feedback-with-impact]]` as the framework, and ask for 1x positive and 1x negative feedback. Carry these into both feedback items every time (see Step 4) — they're not vault-derived content, they're fixed prompts from the template itself.
+
 ---
 
 ## Step 4 — Build and present the proposed agenda
@@ -80,8 +82,8 @@ Map gathered context onto the template's 4 items. Populate:
 
 - **Sukcesy / co idzie dobrze (X min)** — leave as an open prompt for the person unless the vault clearly shows a recent win
 - **Aktualne wyzwania (X min)** — open items from linked projects/teams that need a decision or status check (from 2b), plus unresolved issues/blockers/questions found in 2b/2c and open items from the person's own note (2a)
-- **Feedback dla Ciebie (X min)** — leave as an open prompt
-- **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes)
+- **Feedback dla Ciebie (X min)** — leave as an open prompt; always add the template's standing prompts: ask for 1x positive and 1x negative feedback, using `[[feedback-with-impact]]` as the framework
+- **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes); always add the same standing prompts: ask for 1x positive and 1x negative feedback, using `[[feedback-with-impact]]` as the framework
 
 Output the agenda as a bullet list (`-`), not a numbered list — including when saving it into the journal (Step 5).
 
