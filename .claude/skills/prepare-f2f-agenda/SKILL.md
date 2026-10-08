@@ -85,14 +85,15 @@ Map gathered context onto the template's 4 items. Populate:
 - **Feedback dla Ciebie (X min)** — leave as an open prompt; always add the template's standing prompt: use `[[fwi-feedback-with-impact]]` as the framework
 - **Feedback dla mnie (X min)** — leave as an open prompt (this is inherently conversational, not derivable from notes); always add the template's standing prompt: ask for 1x positive and 1x negative feedback
 
-Output the agenda as a bullet list (`-`), not a numbered list — including when saving it into the journal (Step 5).
-
-For each topic pulled from a project or journal entry, cite the source inline so the user can verify, e.g.:
+Output the agenda as checkboxes, not a numbered list — including when saving it into the journal (Step 5). The 4 template section headers stay plain bullets (`-`, with the minutes); every topic or prompt under a section is an unchecked checkbox (`- [ ]`), indented one level, so each can be ticked off during the meeting:
 ```
-- Status [[cag-upgrade]] — decyzja OneWeb BE nt. backlogu wciąż otwarta (Next Actions)
+- Aktualne wyzwania (22 min)
+	- [ ] Status [[cag-upgrade]] — decyzja OneWeb BE nt. backlogu wciąż otwarta (Next Actions)
 ```
 
-Present the agenda in chat as a bullet list grouped by template section. Do not save anything yet.
+For each topic pulled from a project or journal entry, cite the source inline so the user can verify (as in the example above).
+
+Present the agenda in chat in the same checkbox format, grouped by template section. Do not save anything yet.
 
 If Step 2 found nothing at all for this person (empty note, no project/journal matches) → say so explicitly and present a bare template-only agenda instead of inventing topics.
 
