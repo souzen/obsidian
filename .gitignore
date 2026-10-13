@@ -3,3 +3,7 @@ vault/
 
 # System files
 .DS_STORE
+
+# VS Code
+.vscode/
+*.code-workspace
