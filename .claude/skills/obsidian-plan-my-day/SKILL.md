@@ -99,6 +99,7 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–4. If the journ
 - **Recurring meetings (series)** → title and time only, no description
 - **One-off meetings (non-recurring)** → title, time + short description from the meeting's `description` field (if present); skip if description is empty
 - Category-specific links and agenda content under the heading: as defined in the Step 4 table
+- **Meeting with nothing under its heading** (no agenda, description or breadcrumb — e.g. a category 4 or 6 meeting) → leave two blank lines below the heading instead of one, so the user has room to type notes
 
 ---
 
