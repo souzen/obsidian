@@ -66,7 +66,7 @@ Read matching files — look for:
 - Action items about this project that aren't yet in `### Next Actions`
 
 ### 2d — Today's calendar entry (optional context)
-Find the meeting per "Journal meeting entries" in CLAUDE.md: search the calendar for the project name/keywords, or use an existing `#### <title> [[project-name]]` heading already in today's journal if present. Note title/time — this becomes the meeting to attach the saved note to in Step 4.
+Find the meeting per "Journal meeting entries" in CLAUDE.md: search the calendar for the project name/keywords, or use an existing `### <title> [[project-name]]` heading already in today's journal if present. Note title/time — this becomes the meeting to attach the saved note to in Step 4.
 
 If that journal heading **already has content under it**, treat it as additional input for 2c rather than an empty slot, and don't plan to silently overwrite it (see Edge Cases).
 

@@ -30,7 +30,7 @@ Adds a formatted meeting note to the Obsidian vault journal.
 
 Use the Read tool on the target path.
 
-- **File exists** → read full content; preserve existing content — the note will be **appended** to the `### Meetings` section or at the end of the file.
+- **File exists** → read full content; preserve existing content — the note will be **appended** to the `## Meetings` section or at the end of the file.
 - **File does not exist** → create a new file with minimal structure (see Step 6b).
 
 ---
