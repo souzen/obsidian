@@ -10,9 +10,9 @@ This is an Obsidian vault + Claude Code skills configuration. The actual note co
 
 The vault follows a loose Capture → Organize → Distill → Express flow (CODE), each stage handled by different skills:
 
-- **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-save-to-inbox`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-add-to-journal`, daily tasks via `obsidian-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
+- **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-save-to-inbox`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-journal-add`, daily tasks via `obsidian-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
 - **Organize** — captured material is filed into the PARA structure (`work/`, `my/`): action items move out of the journal into the matching project file; completed/paused items eventually move to `archive/` (manual, no skill does this automatically).
-- **Distill** — `obsidian-review-journal` cleans language and writes a `## Summary` per day; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
+- **Distill** — `obsidian-journal-review` cleans language and writes a `## Summary` per day; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
 - **Express** — distilled context becomes something usable in a real conversation: `prepare-f2f-agenda` and `prepare-meeting-agenda` turn accumulated notes into a concrete meeting agenda.
 
 Consistency in capturing and reviewing matters more than any single note being polished or perfectly filed — see `inbox/the-code-system-my-way.md`.
@@ -55,9 +55,9 @@ Seven skills drive the main workflows. Each skill file is a detailed step-by-ste
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
-| `obsidian-add-to-journal` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
+| `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
 | `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
-| `obsidian-review-journal` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
+| `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
 | `prepare-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
@@ -110,7 +110,7 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 
 A launchd job runs the daily flow unattended on weekdays:
 
-- `~/Library/LaunchAgents/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-review-journal, then run skill obsidian-plan-my-day."` Mon–Fri (currently 08:00).
+- `~/Library/LaunchAgents/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-journal-review, then run skill obsidian-plan-my-day."` Mon–Fri (currently 08:00).
 - Logs: `~/Library/Logs/obsidian-plan-my-day.log`
 - After editing the plist, reload it: `launchctl unload` then `launchctl load` the file.
 

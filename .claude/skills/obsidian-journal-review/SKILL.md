@@ -1,5 +1,5 @@
 ---
-name: obsidian-review-journal
+name: obsidian-journal-review
 description: >
   Reviews and linguistically improves journal files in the Obsidian vault.
   Detects language in each section, corrects grammar/spelling/style accordingly
@@ -13,7 +13,7 @@ description: >
   batch-process unreviewed vault journal files.
 ---
 
-# obsidian-review-journal
+# obsidian-journal-review
 
 Reviews journal files in the Obsidian vault, improves language (Polish or English — auto-detected), saves the improved version, and marks the file as `#claude-reviewed`.
 

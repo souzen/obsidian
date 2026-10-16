@@ -1,5 +1,5 @@
 ---
-name: obsidian-add-to-journal
+name: obsidian-journal-add
 description: >
   Adds a meeting note to the Obsidian journal file (journal/YYYY-MM-DD.md).
   Use this skill whenever the user wants to save meeting notes, write a meeting summary,

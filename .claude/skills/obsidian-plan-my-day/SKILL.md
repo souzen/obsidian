@@ -89,7 +89,7 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–4. If the journ
 - **Always leave empty** — do not insert any content, placeholders, or `?`
 - The user fills these in manually
 - `Notes` and `Reflections` are nested as `### Notes` / `### Reflections` under a `## Journal %% fold %%` parent heading in the current template. Leave the parent heading and both subsections empty; preserve the `%% fold %%` marker verbatim (it's an Obsidian fold directive, not text to clean up).
-- `Summary` is not part of this template — `obsidian-review-journal` adds it later, for already-elapsed days. If a journal file already has one, leave it alone same as the others.
+- `Summary` is not part of this template — `obsidian-journal-review` adds it later, for already-elapsed days. If a journal file already has one, leave it alone same as the others.
 
 ### Rules for the "Meetings" section (`## Meetings`)
 
