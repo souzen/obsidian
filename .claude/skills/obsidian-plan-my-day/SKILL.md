@@ -82,12 +82,12 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–5. If the journ
 
 - **Always leave empty** — do not insert any content, placeholders, or `?`
 - The user fills these in manually
-- `Notes` and `Reflections` are nested as `#### Notes` / `#### Reflections` under a `### Journal %% fold %%` parent heading in the current template. Leave the parent heading and both subsections empty; preserve the `%% fold %%` marker verbatim (it's an Obsidian fold directive, not text to clean up).
+- `Notes` and `Reflections` are nested as `### Notes` / `### Reflections` under a `## Journal %% fold %%` parent heading in the current template. Leave the parent heading and both subsections empty; preserve the `%% fold %%` marker verbatim (it's an Obsidian fold directive, not text to clean up).
 - `Summary` is not part of this template — `obsidian-review-journal` adds it later, for already-elapsed days. If a journal file already has one, leave it alone same as the others.
 
-### Rules for the "Meetings" section (`### Meetings`)
+### Rules for the "Meetings" section (`## Meetings`)
 
-- Each calendar meeting = its own subsection `#### Title (HH:MM–HH:MM)`
+- Each calendar meeting = its own subsection `### Title (HH:MM–HH:MM)`
 - No meetings → insert `No meetings`
 - Skip All Day / OOO / private blocks
 - **Do not include attendees** — always omit this information
@@ -96,7 +96,7 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–5. If the journ
 - **Detected F2F meetings (Step 4)** → append `[[@handle]]` (and any project links the agenda references) after the heading, then insert the generated agenda bullets directly under it — same bullet format `prepare-f2f-agenda` produces
 - **1:1-shaped meeting with no matching person file (Step 4)** → insert the attendee's raw email as a plain line directly below the heading (no formatting, no guessed handle), e.g.:
   ```
-  #### jarek x łukasz (10:45–11:00)
+  ### jarek x łukasz (10:45–11:00)
   jaskoczylas@inpost.pl
   ```
   This is a breadcrumb for the user to create/fix the matching person file — not something later steps or skills should try to resolve automatically.
