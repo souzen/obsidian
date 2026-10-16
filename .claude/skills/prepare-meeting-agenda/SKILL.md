@@ -31,7 +31,7 @@ in the vault, then optionally saves it as today's meeting note.
 
 Input is a project name (e.g. `stage-env`, `product-feeds`, `cag-upgrade`).
 
-- `ls work/projects/` and match case-insensitively against filenames (ignore dashes/spaces, same rule as `obsidian-add-to-journal` Step 5a).
+- `ls work/projects/` and match case-insensitively against filenames (ignore dashes/spaces, per "Journal meeting entries" in CLAUDE.md).
 - If ambiguous (>1 match) or no match → ask the user to pick / confirm the filename.
 - Read the resolved file with the Read tool.
 
@@ -66,7 +66,7 @@ Read matching files — look for:
 - Action items about this project that aren't yet in `### Next Actions`
 
 ### 2d — Today's calendar entry (optional context)
-Same approach as `obsidian-add-to-journal` Step 3: search `Microsoft 365:outlook_calendar_search` for the project name/keywords, or use an existing `### <title> [[project-name]]` heading already in today's journal if present. Note title/time — this becomes the meeting to attach the saved note to in Step 4.
+Find the meeting per "Journal meeting entries" in CLAUDE.md: search the calendar for the project name/keywords, or use an existing `#### <title> [[project-name]]` heading already in today's journal if present. Note title/time — this becomes the meeting to attach the saved note to in Step 4.
 
 If that journal heading **already has content under it**, treat it as additional input for 2c rather than an empty slot, and don't plan to silently overwrite it (see Edge Cases).
 
@@ -105,7 +105,7 @@ After presenting the agenda, ask:
 
 **If yes:**
 - Use the meeting title/time found in Step 2d, or ask the user for one if nothing matched.
-- Insert the agenda bullets under that meeting heading (same insertion rules as `obsidian-add-to-journal` Step 6: existing heading → insert under it; `## Meetings` section exists but no heading → append one; no `## Meetings` section → append it).
+- Insert the agenda bullets under that meeting heading, following the insertion rules in "Journal meeting entries" in CLAUDE.md.
 - Link the project after the heading, e.g. `### <title> [[project-name]]`, plus any people/teams from 2b worth linking.
 - Save with the Write tool (full file, not a patch) and confirm:
   ```

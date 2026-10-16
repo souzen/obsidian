@@ -106,8 +106,8 @@ After presenting the agenda, ask:
 > "Zapisać tę agendę jako notatkę dzisiejszego spotkania w journalu? (tak / nie)"
 
 **If yes:**
-- Determine today's meeting title/time the same way as `obsidian-add-to-journal` Step 3 (match calendar entry with this person, or use the existing `### <title> [[@handle]]` heading already in today's journal if present).
-- Insert the agenda bullets under that meeting heading (same insertion rules as `obsidian-add-to-journal` Step 6: existing heading → insert under it; `## Meetings` section exists but no heading → append one; no `## Meetings` section → append it).
+- Determine today's meeting title/time per "Journal meeting entries" in CLAUDE.md (match the calendar entry with this person, or use the existing `#### <title> [[@handle]]` heading already in today's journal if present).
+- Insert the agenda bullets under that meeting heading, following the insertion rules in "Journal meeting entries" in CLAUDE.md.
 - Link any projects referenced in the agenda after the heading, e.g. `### <title> [[@handle]] [[project-name]]`.
 - Save with the Write tool (full file, not a patch) and confirm:
   ```

@@ -73,7 +73,7 @@ This skill runs unattended (including via the daily cron) — never ask the user
 
 ### Categories 4–6 — project resolution
 
-- `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — same rule as `obsidian-add-to-journal` Step 5a.
+- `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — per "Journal meeting entries" in CLAUDE.md.
 - Match → category 4. Just link the project; do not gather context or build an agenda.
 - No match → no project file to ground the agenda in. Run only 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). If either surfaces something → category 5; if both come up empty → category 6.
 - Never run `prepare-meeting-agenda`'s Step 1 user-confirmation prompt or its Step 4 confirmation (category 5 runs only its Steps 2c–2d) — a miss just means no project context, not a blocker.

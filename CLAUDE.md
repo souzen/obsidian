@@ -82,6 +82,14 @@ tags:
     #### Reflections     # random reflections
 ```
 
+## Journal meeting entries
+
+Shared rules for any skill that attaches a note or agenda to a meeting in today's journal:
+
+- **Find the meeting** (Outlook calendar, `Microsoft 365:outlook_calendar_search`): match by title keywords on the target day; else by approximate time (±30 min); else the meeting that ended latest before now. If today's journal already has a matching `#### <title>` heading, use it instead. Keep title and `HH:MM–HH:MM`; never save participants.
+- **Find the project**: look in `work/projects/` first (`ls`), then in `my/projects/` only if there is no match. Match the name case-insensitively, ignoring dashes/spaces. One match → use it; more than one → ask the user; none in either folder → the calling skill decides.
+- **Insert the entry**: existing `#### <title>` heading → insert under it; `### Meetings` exists but no such heading → append `#### <title> (HH:MM–HH:MM) [[links]]` at the end of that section; no `### Meetings` section → append the section at the end of the file. Write the full file, not a patch.
+
 ## Key conventions
 
 - **Vault path**: always `~/obsidian/vault` (not the git repo root)
