@@ -55,7 +55,7 @@ Seven skills drive the main workflows. Each skill file is a detailed step-by-ste
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
-| `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md`; saves action items to project files |
+| `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md` (journal only — never writes to project files) |
 | `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
 | `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |

@@ -10,197 +10,99 @@ description: >
   user hasn't provided full details. Corrects language and saves to vault.
 ---
 
-# Obsidian Add to Journal — Meeting Notes
+# Obsidian Journal Add — Meeting Notes
 
-Adds a formatted meeting note to the Obsidian vault journal.
+Adds a cleaned-up meeting note to the daily journal. Writes only to the journal file — never to project files.
 
-**Vault:** `/Users/lsosnicki/obsidian/vault`  
-**Journal:** `/Users/lsosnicki/obsidian/vault/journal/`
+**Journal:** `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 ---
 
-## Step 1 — Determine date and target file
+## Step 1 — Date and target file
 
-- Default: **today**. If the user provided a different date → use it.
-- Format: `YYYY-MM-DD` → file: `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
+Default: **today**. If the user gave another date (including a past one) → use it, no confirmation needed.
 
 ---
 
 ## Step 2 — Read the journal file
 
-Use the Read tool on the target path.
+Read the target file with the Read tool.
 
-- **File exists** → read full content; preserve existing content — the note will be **appended** to the `## Meetings` section or at the end of the file.
-- **File does not exist** → create a new file with minimal structure (see Step 6b).
+- **Exists** → preserve all existing content; the note is added in Step 6.
+- **Does not exist** → it will be created in Step 6.
 
 ---
 
-## Step 3 — Detect meeting from calendar
+## Step 3 — Find the meeting (calendar)
 
-Use `Microsoft 365:outlook_calendar_search` to find the meeting.
+Use `Microsoft 365:outlook_calendar_search` on the target day:
 
-### Search strategy
+- **Title given** → search by title keywords; take the closest title match.
+- **Only approximate time given** (e.g. "meeting at 2pm") → take the meeting starting or ending closest to that time (±30 min).
+- **No hints** → take the meeting that ended latest before now.
 
-**If the user provided a meeting title:**
-- Search by keywords from the title on the target day.
-- Match the meeting with the highest title similarity.
+Keep the meeting title and time (`HH:MM–HH:MM`). **Never save participants.**
 
-**If the user provided only an approximate time (e.g. "meeting at 2pm"):**
-- Retrieve all meetings for the target day.
-- Find the meeting that starts or ends closest to the given time (±30 min tolerance).
-
-**If the user provided no hints:**
-- Retrieve all meetings for the target day.
-- Select the one that ended latest before the current time (i.e. most likely the one that just happened).
-
-### Data to save from the meeting (from calendar)
-- Meeting title
-- Time: `HH:MM–HH:MM`
-- Description (if it exists and is not a recurring boilerplate)
-- **Do NOT save participants**
-
-If no match found → use the title/time provided by the user, without calendar data.
+No match (or no calendar access) → use the title/time the user gave, and add `<!-- not found in calendar -->` under the heading.
 
 ---
 
 ## Step 4 — Edit the note
 
-Take the user's raw notes/bullet points and:
+Take the user's raw notes and:
 
-### 4a — Language correction
-- Fix typos, spelling, and grammar errors.
-- Restore missing Polish diacritic characters (ą, ę, ó, ś, ź, ż, ć, ń, ł) if the note is in Polish.
-- Preserve the register (formal / informal) matching the original.
-- Preserve the note's language (PL or EN) — do not translate.
-
-### 4b — Structure as bullet points
-Organise the note as a clean bullet-point list:
-
-1. Convert all content into bullet points and sub-bullet points.
-2. Group related points logically (decisions, blockers, open questions, context).
-3. Use sub-bullets for supporting details or context under a main point.
-4. Keep each bullet concise — one idea per bullet.
-
-### Output format (for journal — NO action items)
+1. Fix typos, spelling and grammar; restore missing Polish diacritics (ą, ę, ó, ś, ź, ż, ć, ń, ł) in Polish text.
+2. Keep the original language (PL or EN — never translate) and register (formal / informal).
+3. Structure the note like this:
 
 ```markdown
-- <point 1>
-  - <sub-point if needed>
-- <point 2>
-- <point 3>
-...
+<1–2 sentence summary>
+
+#### Overview
+- <discussed topic>
+  - <supporting detail if needed>
+
+#### Next Steps
+- [ ] <action point> <assignee_list>
+
+#### Decisions
+- <decision>
 ```
 
-> **Action items do NOT go into the journal note as checkboxes** — the actionable checkbox is saved directly to the project file (Step 5).
-> - If it **was** saved to a project → also add a plain, non-checkbox bullet for it in the journal note (see 5c), so the journal keeps a readable record of what was discussed.
-> - If **no** project match was found, or the matched project file has no `### Next Actions` section → the item goes at the end of the note as a checkbox marked `#todo` instead (see Edge Cases).
+- **Overview** — always present; bullets summarising the discussed topics (group related points, one idea per bullet, sub-bullets for detail).
+- **Next Steps** and **Decisions** — only if applicable; if there are none, skip the whole section including its heading. Next Steps are checkboxes in the journal note only — never written to project files.
+- `<assignee_list>` — the people assigned to the action point, written per the people rule below.
+
+**People rule** (applies everywhere in the note, including assignee lists):
+- First and last name known → `[[@flastname]]`: first letter of the first name + last name, lowercase, no special characters (Łukasz Sośnicki → `[[@lsosnicki]]`).
+- First or last name unknown → keep what you have as `@person` or `@group`, lowercase, no wikilink.
+
+No note content provided → ask: "What do you want to save from the meeting?"
 
 ---
 
-## Step 5 — Detect project and save action items
+## Step 5 — Link projects
 
-Execute this step **before** saving the journal, if the user's notes contain clear action items / follow-ups.
-
-### 5a — Detect project file
-
-**Projects folder:** `/Users/lsosnicki/obsidian/vault/work/projects/`
-
-Get the file list: Bash `ls /Users/lsosnicki/obsidian/vault/work/projects/`.
-
-For each action item, try to match a project:
-
-1. **User explicitly named the project** (e.g. "rollout 200k", "GOKPER", "bielik-ext") →
-   - Search for a file whose name contains the given string (case-insensitive, ignore dashes/spaces).
-   - If one file found → use it.
-   - If >1 matching → **ask the user** which one they mean (show the list).
-
-2. **User did not name the project** →
-   - Try to infer from context (meeting title, keywords in the note).
-   - If match is certain (one obvious candidate) → use it and inform the user.
-   - If ambiguous (>1 candidate or none) → **ask the user**: "Which project should I save the action items to? (or type 'todo' to mark as #todo)"
-
-3. **No matching file found** → mark as `#todo` (see Edge Cases).
-
-### 5b — Check for a `### Next Actions` section
-
-Read the matched project file with the Read tool and check whether it contains a heading matching `Next Actions` (case-insensitive, keyword match — e.g. `### Next Actions`).
-
-- **Section present** → continue to 5c.
-- **Section absent** → treat this the same as "no matching file found": do not touch the project file. The action item goes into the journal note instead, marked `#todo` (see Edge Cases).
-
-### 5c — Append action items to the `Next Actions` list
-
-Append each action item to the **end of the existing `### Next Actions` list** — i.e. as the last item(s) before the next heading. Do not create a separate dated block, and do not include the meeting title or date.
-
-```markdown
-- [ ] <action item 1> ← @person or unassigned #todo
-- [ ] <action item 2> #todo
-```
-
-Save with the Write tool (full file, item(s) inserted at the end of the Next Actions list).
-
-### 5d — Mirror the action item into the journal note (no checkbox, no `#todo`, no project link)
-
-For every action item successfully appended in 5c, add a corresponding **plain bullet** to the journal note's bullet list built in Step 4b — just the action item text, nothing else:
-
-```markdown
-- <action item>
-```
-
-This is purely informational — it lets the journal read as a complete record of the meeting even though the actionable checkbox itself lives in the project file. Do not mark these bullets `#todo`, do not turn them into checkboxes, and do not append a `[[project-name]]` link (the project-level heading link from Step 6 already covers that).
+If the user named a project, or exactly one project is an obvious match for the meeting, add `[[project-name]]` after the heading (name = project filename without `.md`, e.g. `rollout 200k.md` → `[[rollout 200k]]`). Find the project per "Journal meeting entries" in CLAUDE.md. No match or ambiguous → no link, do not ask.
 
 ---
 
-## Step 6 — Append note to journal file
+## Step 6 — Write the journal file
 
-### If file exists and has a `## Meetings` section or `### <meeting title>` subsection
+Heading: `### <Meeting title> (HH:MM–HH:MM) [[project-name]]`
 
-Find the right place:
-1. If a `### <meeting title>` subsection already exists → insert the note directly under the heading (replace empty space or append).
-2. If `## Meetings` section exists but no such subsection → append a new subsection at the end of the Meetings section.
-3. If no `## Meetings` section → append the entire section at the end of the file.
+- Strip any time pattern from the calendar/user title first (`10:00 Weekly Sync`, `Weekly Sync 14:00–15:00`, `(09:30) Daily standup` → `Weekly Sync` / `Daily standup`), then trim leftover whitespace and dashes.
+- Add `(HH:MM–HH:MM)` from Step 3; omit it if the time is unknown. Omit links if none (Step 5).
+- Under the heading goes the note from Step 4 (summary, then `Overview`, and `Next Steps` / `Decisions` when applicable).
 
-### Format of the appended block
+Heading levels: in an existing file, match the levels it already uses — the meeting heading uses the level of the other meeting headings (normally `###`, one below `## Meetings`), and the note's `Overview` / `Next Steps` / `Decisions` go one level deeper (normally `####`). In a new file use the levels in the template below.
 
-If projects were detected (Step 5) → append Obsidian links after the title:
+Placement (existing file):
+1. A heading for this meeting already exists (compare titles ignoring the time and links) → insert the note under it. If it already has content, do not duplicate it — ask the user whether to replace or append.
+2. `## Meetings` exists but no such heading → append the new block at the end of that section.
+3. No `## Meetings` section → append the section at the end of the file.
 
-```markdown
-### <Meeting title> [[project-name1]] [[project-name2]]
-
-- <point 1>
-- <point 2>
-```
-
-If no project detected → heading without links:
-
-```markdown
-### <Meeting title>
-```
-
-> The name in `[[...]]` = project file name **without the `.md` extension**, exactly as it appears in the `work/projects/` folder.  
-> Example: file `rollout 200k.md` → `[[rollout 200k]]`
-
----
-
-## Step 7 — Save the journal file
-
-Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
-
-Write the **full file** (not a patch) — the read content + appended note.
-
-### Title cleanup before saving
-
-When constructing the `### <Meeting title>` heading, **strip any time/hour pattern from the title**:
-- Remove patterns like `HH:MM`, `HH:MM–HH:MM`, `HH:MM-HH:MM`, `(HH:MM)`, `[HH:MM]` from the meeting title.
-- Also remove leading/trailing whitespace and dashes left after stripping.
-- Examples:
-  - `"10:00 Weekly Sync"` → `"Weekly Sync"`
-  - `"Weekly Sync 14:00–15:00"` → `"Weekly Sync"`
-  - `"(09:30) Daily standup"` → `"Daily standup"`
-
-### 7b — If the file did not exist
-
-Create a minimal structure:
+New file:
 
 ```markdown
 ---
@@ -211,39 +113,23 @@ date: <YYYY-MM-DD>
 
 ## Meetings
 
-### <Meeting title>
+### <Meeting title> (HH:MM–HH:MM) [[project-name]]
 
-<note>
+<note from Step 4>
 ```
+
+Saving:
+- **Existing file** → insert the block **in place** with the Edit tool (anchor on the meeting heading, or on the end of the `## Meetings` section). Never rewrite the whole file: that can silently alter other lines (invisible characters, trailing spaces).
+- **New file** → create it with the Write tool.
 
 ---
 
-## Step 8 — Confirm
+## Step 7 — Confirm
 
 ```
 ✅ Note saved:
 📅 /Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md
 📌 Meeting: <Title>
-📁 Action items → <project file name> (N items)
 ```
 
-If there were action items marked `#todo` → list them separately.
-
-Also **display the edited note in the chat** (the bullet-point version), so the user can review it.
-
----
-
-## Edge Cases
-
-| Situation | Behaviour |
-|---|---|
-| No M365 access / no calendar | Use user-provided data; save without calendar metadata |
-| Meeting not found in calendar | Use title/time from user; add `⚠️ Not found in calendar` as a comment |
-| User provided no note content | Ask: "What do you want to save from the meeting?" |
-| Journal file does not exist | Create a new one (Step 7b) |
-| Note is in English | Keep English; do not translate |
-| User provided a past date | Use that date; do not ask for confirmation |
-| Action item — project unknown / ambiguous | Append at the end of the journal note as: `- [ ] <content> #todo` |
-| Action item — project file does not exist on disk | Same as above — append as `#todo` in journal and inform the user |
-| Action item — matched project file has no `### Next Actions` section | Same as above — append as `#todo` in journal, do not create a `Next Actions` section |
-| No action items in notes | Skip Step 5 entirely |
+Also show the formatted note in the chat for review.
