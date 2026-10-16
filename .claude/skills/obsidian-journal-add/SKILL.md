@@ -69,9 +69,15 @@ Take the user's raw notes and:
 - <decision>
 ```
 
-- **Overview** — always present; bullets summarising the discussed topics (group related points, one idea per bullet, sub-bullets for detail).
+- **Overview** — always present; bullets summarising the discussed topics (group related points, one idea per bullet).
 - **Next Steps** and **Decisions** — only if applicable; if there are none, skip the whole section including its heading. Next Steps are checkboxes in the journal note only — never written to project files.
 - `<assignee_list>` — the people assigned to the action point, written per the people rule below.
+
+**Be concise** — shorter is better; the note is a reminder, not a transcript:
+- Summary: one sentence (two only if really needed).
+- Overview: aim for 3–6 bullets, each one line (roughly ≤ 20 words). Merge overlapping points, drop background, filler, repetition and anything that doesn't change what happens next. No sub-bullets unless a detail is essential.
+- Keep what matters: decisions, numbers, dates, names, owners, deadlines, risks. Never shorten or drop a Next Step or a Decision to save space.
+- Prefer plain words over long phrases; no intro phrases like "the team discussed that…".
 
 **People rule** (applies everywhere in the note, including assignee lists):
 - First and last name known → `[[@flastname]]`: first letter of the first name + last name, lowercase, no special characters (Łukasz Sośnicki → `[[@lsosnicki]]`).
