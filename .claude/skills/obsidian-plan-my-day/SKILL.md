@@ -31,7 +31,7 @@ Creates a structured daily plan **for work matters only** and saves it to the Ob
 - **File does not exist** → use the loaded template as the base structure for the new file.
 - If the template contains `{{date}}` or other Obsidian variables — substitute them with the correct value (e.g. date in `YYYY-MM-DD` format).
 
-This step only establishes the skeleton — actual data gets filled in during Step 6.
+This step only establishes the skeleton — actual data gets filled in during Step 5.
 
 ---
 
@@ -39,44 +39,50 @@ This step only establishes the skeleton — actual data gets filled in during St
 
 - **Calendar** — `outlook_calendar_search` (date: the full target day, max_results: 20, timezone: Europe/Warsaw / CET/CEST).
   - Save: title, time (HH:MM–HH:MM), whether the meeting is recurring (series), meeting description (if present), and attendees.
-  - Attendees are used only for the F2F detection in Step 4 — the Meetings section itself never persists either (see Step 6).
+  - Attendees are used only for the F2F detection in Step 4 — the Meetings section itself never persists either (see Step 5).
 
 ---
 
-## Step 4 — Detect F2F/1:1 meetings and generate agendas
+## Step 4 — Classify meetings and build agendas
 
-For each calendar meeting from Step 3 (skip All Day/OOO/private blocks, same as Step 6's Meetings rules):
+Assign every calendar meeting from Step 3 to exactly one of the 6 categories below. Evaluate them **in this order — the first match wins**. For each meeting, build whatever the category calls for and carry it (keyed by meeting) into Step 5.
 
-- **Detect**: the meeting has exactly one attendee besides you (`lsosnicki@inpost.pl`).
-- **Resolve the handle**: take that attendee's email local-part (before `@`). If it contains a `.` (e.g. a contractor suffix like `.sii`, `.b3`), also try the part before the first `.`. Check whether `work/areas/people/@<candidate>.md` exists for either form.
-  - Match found → confirmed F2F, handle = `@<candidate>`.
-  - No match for either form → not a detected F2F. Don't guess a handle, and don't check tags/aliases/other fields as a fallback — carry the attendee's raw email into Step 5 instead, so the user can rename/create the matching person file manually.
-- **For each confirmed F2F**: run `prepare-f2f-agenda`'s Steps 2–4 (gather context, read the `przepis_na_f2f.md` template, build the agenda) for that handle. **Skip its Step 5 confirmation** — this skill runs unattended (including via the daily cron), so write the agenda directly rather than asking "should I save?".
+This skill runs unattended (including via the daily cron) — never ask the user to confirm a match or "should I save?"; write directly.
 
-Carry each built agenda (keyed by handle) — and each unresolved attendee email (keyed by meeting) — into Step 6 for insertion under that meeting's heading.
+| # | Category | Detected when | Agenda | Heading / content in the note |
+|---|---|---|---|---|
+| 1 | **Skipped** | All Day / OOO / private block | none | not written to the note |
+| 2A | **F2F — person file found** | exactly one attendee besides you (`lsosnicki@inpost.pl`) and a person file matches | `prepare-f2f-agenda` | `[[@handle]]` (plus any project links the agenda references) after the heading, then the agenda bullets directly under it — same checkbox format `prepare-f2f-agenda` produces |
+| 2B | **F2F — no person file** | exactly one attendee besides you, no person file matches | none | the attendee's raw email as a plain line directly below the heading (no formatting, no guessed handle) |
+| 3 | **Company-wide** | title contains (case-insensitive) `All Hands`, `Town Hall`, `Kickoff`, `Company`, `Ogólne`, `Cała firma` | none — never run `prepare-meeting-agenda` | plain heading, even if the title also matches a project filename |
+| 4 | **Project meeting** | title matches a `work/projects/` filename | none — do not run `prepare-meeting-agenda` | `[[project-name]]` after the heading; no agenda |
+| 5 | **Reduced agenda** | no project match, but journal mentions (grep by meeting title) or the calendar description yield something | `prepare-meeting-agenda` Steps 2c–2d only (skip 2a/2b) | agenda bullets directly under the heading; no project link |
+| 6 | **Plain** | nothing above matched and 5 found nothing | none | plain heading (expected for one-off syncs with no history — not an error) |
+
+### Category 2 — F2F resolution (A / B)
+
+- **Detect**: exactly one attendee besides you.
+- **Resolve the handle**: take that attendee's email local-part (before `@`). If it contains a `.` (e.g. a contractor suffix like `.sii`, `.b3`), also try the part before the first `.`. Check whether `work/areas/_4_people/@<candidate>.md` exists for either form.
+  - Match found → **2A**, handle = `@<candidate>`. Run `prepare-f2f-agenda`'s Steps 2–4 (gather context, read the `przepis_na_f2f.md` template, build the agenda) for that handle. Skip its Step 5 confirmation.
+  - No match for either form → **2B**. Don't guess a handle, and don't check tags/aliases/other fields as a fallback — carry the attendee's raw email into Step 5 so the user can rename/create the matching person file manually. Example:
+    ```
+    ### jarek x łukasz (10:45–11:00)
+    jaskoczylas@inpost.pl
+    ```
+    This is a breadcrumb for the user — not something later steps or skills should try to resolve automatically.
+
+### Categories 4–6 — project resolution
+
+- `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — same rule as `obsidian-add-to-journal` Step 5a.
+- Match → category 4. Just link the project; do not gather context or build an agenda.
+- No match → no project file to ground the agenda in. Run only 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). If either surfaces something → category 5; if both come up empty → category 6.
+- Never run `prepare-meeting-agenda`'s Step 1 user-confirmation prompt or its Step 4 confirmation (category 5 runs only its Steps 2c–2d) — a miss just means no project context, not a blocker.
 
 ---
 
-## Step 5 — Generate agendas for non-company-wide meetings
+## Step 5 — Fill in the journal file
 
-For each calendar meeting from Step 3 that Step 4 did **not** already claim as a confirmed F2F:
-
-- **Detect company-wide meetings**: the title contains a company-wide keyword (case-insensitive) — `All Hands`, `Town Hall`, `Kickoff`, `Company`, `Ogólne`, `Cała firma`.
-  - Match → company-wide meeting. Skip the rest of this step for it — treat it as a normal meeting in Step 6, even if its title also happens to match a project filename. Never run `prepare-meeting-agenda` for a company-wide meeting.
-  - No match → continue below; run `prepare-meeting-agenda` for every one of these, whether or not it matches a project.
-- **Resolve the project (`prepare-meeting-agenda` Step 1)**: `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — same rule as `obsidian-add-to-journal` Step 5a.
-  - Match found → confirmed project meeting. Run `prepare-meeting-agenda`'s Step 2 (gather context) and Step 3 (build agenda) in full, project file included.
-  - No match → no project file to ground the agenda in. Skip 2a (project file) and 2b (people/teams from project frontmatter); still run 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). Build the agenda from whatever 2c/2d surface — if both come up empty, treat it as a normal meeting in Step 6 (no agenda, no breadcrumb; this is expected for one-off syncs with no history).
-- **Skip `prepare-meeting-agenda`'s Step 1 user-confirmation prompt** for the no-match case too — this skill runs unattended, so never ask the user to confirm/pick a filename; a miss just means no project context, not a blocker.
-- **Skip its Step 4 confirmation** — same reasoning as Step 4's F2F agendas: this skill runs unattended, so write the agenda directly rather than asking "should I save?".
-
-Carry each built agenda (keyed by meeting) into Step 6 for insertion under that meeting's heading. When a project was matched, append `[[project-name]]` after the heading (as before); when none was matched, the heading gets no project link.
-
----
-
-## Step 6 — Fill in the journal file
-
-Fill in the skeleton from Step 2 with data gathered in Steps 3–5. If the journal file already existed, preserve the user's existing notes (Notes, Reflections, Summary sections, manual entries). Only fill in empty placeholders or sections with no content yet. Do not overwrite anything that looks like a manual entry.
+Fill in the skeleton from Step 2 with data gathered in Steps 3–4. If the journal file already existed, preserve the user's existing notes (Notes, Reflections, Summary sections, manual entries). Only fill in empty placeholders or sections with no content yet. Do not overwrite anything that looks like a manual entry.
 
 ### Rules for "Notes", "Reflections", "Summary" sections
 
@@ -87,30 +93,22 @@ Fill in the skeleton from Step 2 with data gathered in Steps 3–5. If the journ
 
 ### Rules for the "Meetings" section (`## Meetings`)
 
-- Each calendar meeting = its own subsection `### Title (HH:MM–HH:MM)`
+- Each meeting (every category except 1) = its own subsection `### Title (HH:MM–HH:MM)`
 - No meetings → insert `No meetings`
-- Skip All Day / OOO / private blocks
-- **Do not include attendees** — always omit this information
+- **Do not include attendees** — always omit this information (the only exception is the 2B breadcrumb email)
 - **Recurring meetings (series)** → title and time only, no description
 - **One-off meetings (non-recurring)** → title, time + short description from the meeting's `description` field (if present); skip if description is empty
-- **Detected F2F meetings (Step 4)** → append `[[@handle]]` (and any project links the agenda references) after the heading, then insert the generated agenda bullets directly under it — same bullet format `prepare-f2f-agenda` produces
-- **1:1-shaped meeting with no matching person file (Step 4)** → insert the attendee's raw email as a plain line directly below the heading (no formatting, no guessed handle), e.g.:
-  ```
-  ### jarek x łukasz (10:45–11:00)
-  jaskoczylas@inpost.pl
-  ```
-  This is a breadcrumb for the user to create/fix the matching person file — not something later steps or skills should try to resolve automatically.
-- **Meetings with a generated agenda (Step 5)** → insert the agenda bullets directly under the heading, same bullet format `prepare-meeting-agenda` produces; append `[[project-name]]` after the heading only if a project was matched, otherwise the heading gets no link
+- Category-specific links and agenda content under the heading: as defined in the Step 4 table
 
 ---
 
-## Step 7 — Save the file
+## Step 6 — Save the file
 
 Write tool → `/Users/lsosnicki/obsidian/vault/journal/<YYYY-MM-DD>.md`
 
 ---
 
-## Step 8 — Confirm and summarize
+## Step 7 — Confirm and summarize
 
 ```
 ✅ Daily plan saved:
@@ -126,10 +124,9 @@ Also display a **brief chat summary**: meetings for today.
 
 ## Edge Cases
 
-- **No M365 access** → create file with empty Meetings section, add `⚠️ Could not fetch calendar`; skip Steps 4–5 (no calendar data to detect F2Fs or project meetings from)
-- **1:1-shaped meeting with no matching person file** → treat as a normal meeting, but still surface the unresolved email below the heading (Step 6); do not block the rest of the plan on it
-- **Meeting title doesn't match any project** → still attempt a reduced agenda from journal mentions + calendar description (Step 5); only fall back to a normal meeting (Step 6, no breadcrumb) if that yields nothing either — this is expected for one-off syncs with no history, not an error
-- **Company-wide meeting title also happens to match a project filename** → still treat as a normal meeting (Step 6); company-wide detection wins, no `prepare-meeting-agenda` run
+- **No M365 access** → create file with empty Meetings section, add `⚠️ Could not fetch calendar`; skip Step 4 (no calendar data to classify)
+- **Category 2B** → treat as a normal meeting, but still surface the unresolved email below the heading; do not block the rest of the plan on it
+- **Category 3 title also matches a project filename** → company-wide wins (it is checked first); no `prepare-meeting-agenda` run
 - **Journal file already has content** → preserve it, fill only placeholders
 - **Planning for tomorrow** → use tomorrow's calendar
 - **Vault unavailable** → print the full plan content to chat/stdout (not just an error message) and inform the user that saving failed, so the plan isn't lost even if nothing gets written to disk
