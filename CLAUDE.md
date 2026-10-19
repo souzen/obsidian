@@ -51,11 +51,12 @@ Both `work/` and `my/` are organised using the **PARA method** (Projects → Are
 
 ## Skills (`.claude/skills/`)
 
-Seven skills drive the main workflows. Each skill file is a detailed step-by-step spec that Claude must follow exactly:
+These skills drive the main workflows. Each skill file is a detailed step-by-step spec that Claude must follow exactly:
 
 | Skill | Trigger phrases | What it does |
 |---|---|---|
 | `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md` (journal only — never writes to project files) |
+| `obsidian-journal-import-wispr` | "import wispr notes", "add new wispr notes to journal", "sync wispr" | Fetches finalized Wispr Flow notes, skips already imported ones, and runs `obsidian-journal-add` for each (asks before each note) |
 | `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
 | `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |

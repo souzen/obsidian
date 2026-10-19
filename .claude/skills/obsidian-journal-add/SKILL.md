@@ -100,6 +100,7 @@ Heading: `### <Meeting title> (HH:MM–HH:MM) [[project-name]]`
 - Strip any time pattern from the calendar/user title first (`10:00 Weekly Sync`, `Weekly Sync 14:00–15:00`, `(09:30) Daily standup` → `Weekly Sync` / `Daily standup`), then trim leftover whitespace and dashes.
 - Add `(HH:MM–HH:MM)` from Step 3; omit it if the time is unknown. Omit links if none (Step 5).
 - Under the heading goes the note from Step 4 (summary, then `Overview`, and `Next Steps` / `Decisions` when applicable).
+- **Source marker:** if the input includes a marker line such as `<!-- wispr:<id> -->`, put it on its own line directly under the heading, above the summary. If that exact marker is already in the file, the note was imported before — write nothing and say so.
 
 Heading levels: in an existing file, match the levels it already uses — the meeting heading uses the level of the other meeting headings (normally `###`, one below `## Meetings`), and the note's `Overview` / `Next Steps` / `Decisions` go one level deeper (normally `####`). In a new file use the levels in the template below.
 
