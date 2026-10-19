@@ -1,239 +1,90 @@
 ---
 name: obsidian-journal-review
 description: >
-  Reviews and linguistically improves journal files in the Obsidian vault.
-  Detects language in each section, corrects grammar/spelling/style accordingly
-  (Polish or English), replaces the original text in-place, and marks the file
-  as "claude-reviewed" so it is never processed twice.
-  Use this skill whenever the user says "przejrzyj dziennik", "popraw journal",
-  "review my journal", "улучши журнал", "review journal entries", "popraw wpisy",
-  "sprawdź journal", "przejrzyj notatki", "review my notes", or asks to
-  linguistically improve, proofread, or clean up daily notes in Obsidian.
-  Also trigger when the user asks to "mark journal as reviewed" or wants to
-  batch-process unreviewed vault journal files.
+  Processes journal entries marked with the tag #claude-review: copies the entry's Decisions into the
+  Log of the project linked in the entry title, appends its Next Steps to that project's Next Actions,
+  and changes the tag to #claude-reviewed. Use this skill whenever the user says "review journal",
+  "przejrzyj dziennik", "process journal entries", "move decisions and next steps to projects",
+  "przenieś decyzje i next steps do projektów", or asks to handle journal entries tagged #claude-review.
+  Runs unattended every weekday morning (before obsidian-plan-my-day), so it never asks questions.
 ---
 
 # obsidian-journal-review
 
-Reviews journal files in the Obsidian vault, improves language (Polish or English — auto-detected), saves the improved version, and marks the file as `#claude-reviewed`.
+For every journal entry tagged `#claude-review`, pushes its **Decisions** and **Next Steps** into the project linked in the entry title, then marks the entry `#claude-reviewed`. No language correction, no day summary.
 
-**Vault:** `/Users/lsosnicki/obsidian/vault`
-**Journal dir:** `/Users/lsosnicki/obsidian/vault/journal/`
+**Journal dir:** `/Users/lsosnicki/obsidian/vault/journal/` (skip `archive/`)
+**Projects:** `/Users/lsosnicki/obsidian/vault/work/projects/`, then `/Users/lsosnicki/obsidian/vault/my/projects/`
 
----
-
-## Step 1 — Find unprocessed files
-
-Use Bash `ls /Users/lsosnicki/obsidian/vault/journal/`.
-
-For each `.md` file:
-- Read it with the Read tool
-- Check whether it contains the tag `#claude-reviewed` **anywhere in the file** (in content or frontmatter)
-- **Skip the file if the tag is present**
-- If the filename matches the `YYYY-MM-DD.md` pattern, parse the date and **skip the file if the date is today or in the future** — only fully-elapsed days are safe to summarize and lock
-
-Build a list of files to process (those without `#claude-reviewed`).
-
-If the list is empty → stop and inform the user:
-> `✅ All journal files are already marked as claude-reviewed. Nothing new to process.`
+Unattended: never ask. If something can't be done, leave the tag as is and report it.
 
 ---
 
-## Step 2 — Process each file
+## Step 1 — Find marked entries
 
-For each file in the list:
+`grep -n -E '#claude-review([^d]|$)' /Users/lsosnicki/obsidian/vault/journal/*.md` — `#claude-reviewed` does not match.
 
-### 2a — Split into sections
+An **entry** is the `###` heading line that carries the tag, plus everything below it up to the next heading of the same or higher level. Its sub-sections are `Overview`, `Next Steps` and `Decisions` (`####`, matched by keyword).
 
-Split the file content into sections by Markdown headings (`##`, `###`). Treat each section as an independent unit for review.
-
-Sections to **skip** (do not modify their content):
-- Empty sections or sections containing only `---` separators
-- YAML frontmatter (`---` at the top of the file)
-- Inline tags (`#tag`) and wikilinks (`[[...]]`) — preserve as-is within text
-
-Sections to **process** (improve language):
-- `Notes` — narrative text and bullet lists about the day. Nested as `### Notes` under a `## Journal %% fold %%` parent heading in the current template (the parent heading itself has no content — descend into it the same way you descend into `### Title (HH:MM–HH:MM)` subheadings under `## Meetings`). Older files may still have this as a flat `## Notes` section instead (or nested under a `### Notes %% fold %%` parent, or as `#### Notes` under `### Journal`, from earlier revisions of the template).
-- `Reflections` — skip if empty. Nested as `### Reflections` under the same `## Journal` parent in the current template; older files may still have it as a flat `## Reflections` section or as `#### Reflections` under `### Journal`.
-- `Summary` — skip if empty (will be populated in Step 5)
-- `Meetings` — descriptive text under meeting subheadings (**not** the meeting titles or times in `### Title (HH:MM–HH:MM)` format; older files may use `####`)
-- Any other sections containing narrative text
-
-> **Note:** Section names may vary between files (e.g. `Meetings` without emoji, `Notes`/`Daily` naming, older flat vs. newer nested structure). Match sections by keyword, not exact string or heading level.
-
-### 2b — Detect section language
-
-For each section to process:
-- **Polish**: sentences contain Polish diacritics (ą, ę, ó, ś, ź, ż, ć, ń, ł) or Polish function words (z, na, do, że, jest, nie)
-- **English**: sentences contain English function words (the, is, are, and, with, for)
-- Mixed section → use the dominant language
-- Section too short to assess (1–2 words) → skip
-
-### 2c — Correct the text
-
-For each section with a detected language, apply the following corrections:
-
-**Polish:**
-- Restore missing Polish diacritics (e.g. `ze` → `że`, `cos` → `coś`, `sie` → `się`)
-- Fix typos and spelling errors
-- Fix grammar errors (declension, syntax)
-- Fix punctuation
-- Improve style: remove repetitions, awkward phrasing
-- Preserve the original register (informal journal → stays informal)
-- Preserve the author's meaning and intent — do not rephrase radically
-
-**English:**
-- Fix typos and spelling errors
-- Fix grammar (verb forms, articles, number)
-- Fix punctuation
-- Light style improvement without changing tone
-
-**Never change:**
-- Proper nouns, names, company abbreviations (GoKart, InPost, JSM-XXXXX)
-- Markdown formatting (bold, italic, headings)
-- Wikilinks `[[...]]`
-- Tags `#...`
-- Times, dates, numbers
-
-### 2d — Replace text in file
-
-For each changed section: replace the original text with the corrected text, leaving the rest of the file unchanged.
-
-Use the Write tool to save the updated version of the entire file.
-
-### 2e — Remove the `My Day` section
-
-Delete the entire `My Day` section from the file — its heading and all its content, including task checkboxes (`- [ ]` / `- [x]`) and any `[SUGGESTION]` items.
-
-- Match the section by keyword (`My Day`, with or without emoji).
-- Remove everything from the `## My Day` (or `### My Day`) heading up to — but not including — the next heading of the same or higher level.
-- If the section is absent, do nothing.
-- Leave all other sections untouched.
-
-This is a planning artifact, not journal content; it must not remain in the reviewed file.
+No marked entries → say so and stop.
 
 ---
 
-## Step 3 — Mark file as `#claude-reviewed`
+## Step 2 — Process each entry
 
-After saving corrections, add the `#claude-reviewed` tag to the file. The tag always goes at the **top of the file**.
+Read the journal file first. Then for each entry:
 
-### How to add the tag
+### 2a — Title, date, project
 
-**If the file has YAML frontmatter** (starts with `---`):
+- **Title:** the heading text without any hour — remove time ranges and single times in any form (`(11:30–11:55)`, `11:30-11:55`, `(09:30)`, `[09:30]`) — and without the `[[links]]` and the tag; trim leftover spaces and dashes; first letter capitalised. Example: `magento / presta / woo plugins - status (11:30–11:55) [[integration-plugins]] #claude-review` → `Magento / presta / woo plugins - status`.
+- **Date:** from the journal filename (`YYYY-MM-DD.md`).
+- **Project:** the `[[...]]` links in the heading that match a project file (`work/projects/<name>.md`, else `my/projects/<name>.md`). People (`[[@…]]`) and teams (`[[~…]]`) are not projects. Exactly one project is required — none or several → skip the entry, leave the tag, report why.
 
-Add `claude-reviewed` to the `tags:` section in frontmatter:
+### 2b — Decisions → project Log
 
-```yaml
----
-tags:
-  - existing-tag
-  - claude-reviewed
----
-```
-
-If `tags:` doesn't exist, add it:
-
-```yaml
----
-tags:
-  - claude-reviewed
----
-```
-
-**If the file has NO frontmatter** (typical journal file — e.g. `journal/YYYY-MM-DD.md`):
-
-Add YAML frontmatter with the tag at the very top of the file:
-
-```yaml
----
-tags:
-  - claude-reviewed
----
-
-## 🌊 Meetings
-...
-```
-
-Save the file with the tag using the Write tool.
-
----
-
-## Step 5 — Write day summary into `Summary` section
-
-After applying language corrections, synthesize the content of the entire file into a concise summary and write it into the `Summary` section (or `Summary` / `Closing line` — match by keyword).
-
-### What to include
-
-Read all populated sections of the file — `Meetings`, `Notes`, `Reflections` — and extract the key information from that day.
-
-Write the summary as a **bullet list of key takeaways**, for example:
+If the entry has a `Decisions` sub-section, read the project file and add this block as the **first** entry in its `### Log` section (match the heading by keyword `Log`, directly under the section's intro line, above older entries):
 
 ```markdown
+#### Decisions - <Title> [[<YYYY-MM-DD>]]
 
-- Rollout 200k brief with Pepco held — workshop tomorrow 15.04
-- Dynatrace observability dashboards status reviewed with Tczerko
-- CAG upgrade: throttling issues identified, next steps defined (workshop + problem definition)
-- JSM-426665 PagerDuty access request for Paweł Bonikowski pending approval
-- Ticket JSM-409079 (Merchant Portal password reset) still unresolved
+- <decision>
+- <decision>
+
 ```
 
-### Rules
+- Bullets are copied unchanged.
+- Already there (same `#### Decisions - <Title> [[<YYYY-MM-DD>]]` heading) → skip, nothing to add.
+- Project has no `Log` section → skip the entry, leave the tag, report.
 
-- **3–7 bullet points** — only the most important facts, decisions, and open items
-- Use the **dominant language of the file** (Polish or English)
-- Be factual and brief — no filler phrases like "Today was a busy day"
-- Include: decisions made, key outcomes from meetings, open action items, important tickets/blockers
-- Omit: routine recurring meetings with no notable outcome, empty sections
-- If `Summary` already has content → **preserve it**, do not overwrite
+### 2c — Next Steps → project Next Actions
 
-### Positioning the Summary section
+If the entry has a `Next Steps` sub-section, append its items at the **bottom of the project's `### Next Actions` list** (after the last item, before the next heading), as top-level items exactly as written (`- [ ] … [[@assignee]]`).
 
-After generating (or preserving) the summary content, **move the entire `Summary` section to be the first section in the file**, immediately after the YAML frontmatter closing `---` and before all other sections (`Meetings`, etc.). Add a blank line after the last bullet of the summary text.
+- An item whose text is already in that section (compared after trimming) → skip it.
+- Project has no `Next Actions` section → skip the entry, leave the tag, report.
 
-**Important:** Place `## Summary` on the very next line after the closing `---` — **no blank line** between frontmatter and the Summary heading. There **is** a blank line between the `## Summary` heading and the first bullet.
+### 2d — Flip the tag and drop the hour from the journal heading
 
-Example final file structure:
-```markdown
----
-tags:
-  - claude-reviewed
----
-## Summary
+Only when 2b and 2c finished (or had nothing to do), edit the journal heading line:
+- replace `#claude-review` with `#claude-reviewed`;
+- remove the hour from the heading (any form, same as in 2a: `(11:30–11:55)`, `11:30-11:55`, `(09:30)`, …), keeping the title, the `[[links]]` and the tag. Example: `### magento / presta (11:30–11:55) [[integration-plugins]] #claude-review` → `### magento / presta [[integration-plugins]] #claude-reviewed`.
 
-- Key takeaway 1
-- Key takeaway 2
-
-## 🌊 Meetings
-...
-```
-
-Use the Write tool to save the file with the summary filled in and repositioned.
+The rest of the journal entry is left untouched — the journal keeps the full record.
 
 ---
 
-## Step 6 — Summary
+## Rules
 
-After processing all files, display in chat:
-
-```
-✅ Journal review complete
-
-📋 Processed files: N
-  - 2026-04-12.md — improved N sections
-  - 2026-04-13.md — no changes (sections empty)
-
-⏭️ Skipped (already reviewed): N files
-```
-
-If any file had notable corrections, optionally show 1–2 before/after examples for transparency.
+- Edit **in place** with the Edit tool; never rewrite a whole file (it can silently alter other lines).
+- Only change: the tag and the hour in the journal heading, the project's `Log` and `Next Actions` sections.
+- Never touch entries already tagged `#claude-reviewed`.
 
 ---
 
-## Edge Cases
+## Step 3 — Report
 
-- **Archive files** (`journal/archive/`): skip all files in subdirectories unless the user explicitly asks to process the archive
-- **Section contains only emojis or single words**: skip, nothing to correct
-- **Empty file**: mark as `#claude-reviewed` without modifying content
-- **Filesystem unavailable**: inform the user and exit with an error
-- **Very long file (>300 lines)**: process section by section, save the full file in a single `write_file` call at the end
+```
+✅ Journal review: N entries processed, N skipped
+- 2026-10-19 · <Title> → [[project]] — decisions: added / already there / none · next steps: N added, N already there / none
+- 2026-10-19 · <Title> — skipped: <reason>
+```

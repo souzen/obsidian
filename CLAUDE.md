@@ -12,7 +12,7 @@ The vault follows a loose Capture → Organize → Distill → Express flow (COD
 
 - **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-save-to-inbox`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-journal-add`, daily tasks via `obsidian-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
 - **Organize** — captured material is filed into the PARA structure (`work/`, `my/`): action items move out of the journal into the matching project file; completed/paused items eventually move to `archive/` (manual, no skill does this automatically).
-- **Distill** — `obsidian-journal-review` cleans language and writes a `## Summary` per day; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
+- **Distill** — `obsidian-journal-review` moves the Decisions and Next Steps of journal entries tagged `#claude-review` into the linked project; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
 - **Express** — distilled context becomes something usable in a real conversation: `prepare-f2f-agenda` and `prepare-meeting-agenda` turn accumulated notes into a concrete meeting agenda.
 
 Consistency in capturing and reviewing matters more than any single note being polished or perfectly filed — see `inbox/the-code-system-my-way.md`.
@@ -58,7 +58,7 @@ These skills drive the main workflows. Each skill file is a detailed step-by-ste
 | `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md` (journal only — never writes to project files) |
 | `obsidian-journal-import-wispr` | "import wispr notes", "add new wispr notes to journal", "sync wispr" | Fetches finalized Wispr Flow notes, skips already imported ones, and runs `obsidian-journal-add` for each (asks before each note) |
 | `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
-| `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | Corrects grammar/spelling (PL+EN), writes summary, adds `#claude-reviewed` tag |
+| `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | For journal entries tagged `#claude-review`: copies Decisions into the linked project's Log, appends Next Steps to its Next Actions, then retags `#claude-reviewed` |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
 | `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
 | `prepare-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
@@ -69,12 +69,6 @@ These skills drive the main workflows. Each skill file is a detailed step-by-ste
 Daily notes follow this structure (populated by the `plan-my-day` skill using the template at `vault/work/resources/tools/obsidian/templates/daily.md`):
 
 ```markdown
----
-tags:
-  - claude-reviewed   # added by review skill; skip file if present
----
-## Summary            # written by review skill; placed first, right after frontmatter
-
 ## Meetings           # ### Title [[project-link]] subsections
                        # format: ### Meeting Title (HH:MM–HH:MM)
 
@@ -102,7 +96,7 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 - **Language**: notes are mixed Polish/English; detect per-section, never translate
 - **Meeting titles**: strip time patterns (`HH:MM`, `HH:MM–HH:MM`) before using as headings
 - **Kanban**: only `## Doing` column matters; `- [ ]` = active, `- [x]` = done today
-- **`#claude-reviewed` tag**: presence means skip the file — never re-process it
+- **`#claude-review` / `#claude-reviewed` tags**: `#claude-review` on a meeting heading in the journal queues that entry for `obsidian-journal-review`; after processing it becomes `#claude-reviewed` and is never processed again
 - **Archive**: manual only, no skill does this automatically. Observed pattern: project/area files → `archive/<year>/`; inactive people → `archive/people/`; team-specific docs → `archive/<team-name>/`; kanban boards snapshotted as `<board-name>-archive-<year>.md`. Journal archive is flat (`journal/archive/YYYY-MM-DD.md`, no year subfolder) — inconsistent with the others but that's the real state.
 - **Tags live in two places**: personal project files often tag via frontmatter (`tags:\n  - firearms`), while kanban boards mix in inline `#hashtag` text on the same line as the item. A tag-based search/analysis must check both — grepping only for `#hashtag` will silently miss frontmatter-tagged files.
 - **Voice-dictated meeting notes can be garbled**: raw dictated text occasionally mis-transcribes meeting titles, acronyms, or proper nouns (e.g. a meeting title heard as unrelated words, or a topic word garbled into something that looks like a real acronym). When the dictated content doesn't cleanly match the calendar event or vault content, flag the mismatch to the user instead of silently guessing.
