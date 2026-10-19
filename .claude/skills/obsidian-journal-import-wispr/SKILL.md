@@ -38,15 +38,25 @@ Call `mcp__wispr-flow__search_meetings` with `since` / `until` (or no dates for 
 
 ---
 
-## Step 3 — Skip notes that are already imported
+## Step 3 — Match calendar events and skip imported notes
 
-`obsidian-journal-add` writes a marker `<!-- wispr:<meeting id> -->` under every note it saves from Wispr. For each note, read the journal of its start date (`vault/journal/<YYYY-MM-DD>.md`) and check whether the marker with that meeting id is present → **already imported**.
+For each note:
+
+1. **Match the calendar event:** search Outlook (`Microsoft 365:outlook_calendar_search`) for the note's day (once per day) and pick the event whose time overlaps the note's start/end the most (it should cover at least half of the shorter of the two).
+   - Match found → use the **calendar title and time** (Wispr titles are auto-generated and often differ). If the note's content clearly does not fit that event's title, flag the mismatch to the user instead of guessing.
+   - No match → use the Wispr title and its local time, and tell the user it isn't in the calendar.
+2. **Check the journal** (`vault/journal/<YYYY-MM-DD>.md`) for a `###` heading matching the meeting title, ignoring the time and links:
+   - Heading exists **and already has an `Overview` sub-section** → **already imported** — skip it.
+   - Heading exists without an `Overview` (empty, or only the calendar agenda) → **new**, goes under that heading.
+   - No heading → **new**, will create a new entry.
+
+Nothing is stored in the journal to track imports — the `Overview` sub-section is the only signal.
 
 Show the user a table:
 
-| Time | Wispr title | Status |
-|---|---|---|
-| 09:00–09:30 | … | new / already imported |
+| Time | Wispr title | Meeting | Status |
+|---|---|---|---|
+| 09:00–09:30 | … | calendar title | new (existing heading) / new (new entry) / already imported |
 
 No new notes → say so and stop.
 
@@ -59,19 +69,13 @@ Notes are processed sequentially — they edit the same journal file.
 For each new note:
 
 1. **Fetch the note:** `mcp__wispr-flow__get_meeting` with the meeting id. Use the `summary` (it holds the Overview / Next Steps / Decisions) plus `content` if present. Use the transcript (`view_transcript`) only when the summary is empty or clearly insufficient. Retry once on a connection error.
-2. **Match the calendar event:** search Outlook (`Microsoft 365:outlook_calendar_search`) for the note's day and pick the event whose time overlaps the note's start/end the most (it should cover at least half of the shorter of the two).
-   - Match found → use the **calendar title and time** (Wispr titles are auto-generated and often differ). If the note's content clearly does not fit that event's title, flag the mismatch to the user instead of guessing.
-   - No match → use the Wispr title and its local time, and tell the user it isn't in the calendar.
-3. **Confirm — only if the journal has no entry for this meeting.** Compare the meeting title (the calendar title if step 2 matched, otherwise the Wispr title) with the `###` headings in that day's journal, ignoring the time and links.
-   - **A matching heading exists** → import without asking.
-   - **No matching heading** → ask: "Import '<title>' (HH:MM–HH:MM)? It will create a new entry." — options: import / skip / stop.
-4. **Invoke `obsidian-journal-add`** with the Skill tool. Pass in the args:
+2. **Confirm — only for a new entry** (no matching heading): ask "Import '<title>' (HH:MM–HH:MM)? It will create a new entry." — options: import / skip / stop. A note that goes under an existing heading needs no confirmation.
+3. **Invoke `obsidian-journal-add`** with the Skill tool. Pass in the args:
    - the date (`YYYY-MM-DD`)
-   - the meeting title and time (`HH:MM–HH:MM`) from step 2
-   - the source marker line: add `<!-- wispr:<meeting id> -->`
-   - the raw note text from step 2
+   - the meeting title and time (`HH:MM–HH:MM`) from step 3
+   - the raw note text from step 1
    - a remark that speakers appear as `speaker1` / `speaker2` and that the note comes from Wispr Flow
-5. Let `obsidian-journal-add` run to the end. If the heading already has content, journal-add appends below it (no question). Do not write to the journal yourself.
+4. Let `obsidian-journal-add` run to the end. If the heading already has content, journal-add appends below it (no question). Do not write to the journal yourself.
 
 ---
 
@@ -88,7 +92,7 @@ List any title mismatches or notes not found in the calendar so the user can rev
 
 ## Rules
 
-- Never create a new journal entry without the user's go-ahead (Step 4.3); notes that go under an existing matching heading need no confirmation. This skill is not meant for unattended runs.
+- Never create a new journal entry without the user's go-ahead (Step 4.2); notes that go under an existing matching heading need no confirmation. This skill is not meant for unattended runs.
 - Never write to project files or the journal directly — only through `obsidian-journal-add`.
-- Don't re-import a note whose marker is already in the journal; if the user explicitly wants a re-import, append it below the existing content.
-- Keep the Wispr share link out of the journal; only the meeting-id marker is stored.
+- Don't re-import a note whose meeting already has an `Overview` in the journal; if the user explicitly wants a re-import, append it below the existing content.
+- Keep Wispr identifiers and share links out of the journal — no markers, ids or links are written.
