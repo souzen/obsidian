@@ -6,7 +6,7 @@ description: >
   load, check, sync or import notes from Wispr Flow into the journal, or says things like
   "import wispr notes", "add new wispr notes to journal", "sync wispr", "load latest note from wispr",
   "zaimportuj notatki z wispr", "dodaj notatki z wispr do dziennika", "są nowe notatki we wispr?".
-  Interactive only — it asks before each note is written.
+  Interactive — it asks only before creating a new journal entry; notes for meetings already in the journal are added without asking.
 ---
 
 # Obsidian Journal Import — Wispr Flow
@@ -58,18 +58,20 @@ Notes are processed sequentially — they edit the same journal file.
 
 For each new note:
 
-1. **Ask first:** "Import '<title>' (HH:MM–HH:MM)?" — options: import / skip / stop.
-2. **Fetch the note:** `mcp__wispr-flow__get_meeting` with the meeting id. Use the `summary` (it holds the Overview / Next Steps / Decisions) plus `content` if present. Use the transcript (`view_transcript`) only when the summary is empty or clearly insufficient. Retry once on a connection error.
-3. **Match the calendar event:** search Outlook (`Microsoft 365:outlook_calendar_search`) for the note's day and pick the event whose time overlaps the note's start/end the most (it should cover at least half of the shorter of the two).
+1. **Fetch the note:** `mcp__wispr-flow__get_meeting` with the meeting id. Use the `summary` (it holds the Overview / Next Steps / Decisions) plus `content` if present. Use the transcript (`view_transcript`) only when the summary is empty or clearly insufficient. Retry once on a connection error.
+2. **Match the calendar event:** search Outlook (`Microsoft 365:outlook_calendar_search`) for the note's day and pick the event whose time overlaps the note's start/end the most (it should cover at least half of the shorter of the two).
    - Match found → use the **calendar title and time** (Wispr titles are auto-generated and often differ). If the note's content clearly does not fit that event's title, flag the mismatch to the user instead of guessing.
    - No match → use the Wispr title and its local time, and tell the user it isn't in the calendar.
+3. **Confirm — only if the journal has no entry for this meeting.** Compare the meeting title (the calendar title if step 2 matched, otherwise the Wispr title) with the `###` headings in that day's journal, ignoring the time and links.
+   - **A matching heading exists** → import without asking.
+   - **No matching heading** → ask: "Import '<title>' (HH:MM–HH:MM)? It will create a new entry." — options: import / skip / stop.
 4. **Invoke `obsidian-journal-add`** with the Skill tool. Pass in the args:
    - the date (`YYYY-MM-DD`)
-   - the meeting title and time (`HH:MM–HH:MM`) from step 3
+   - the meeting title and time (`HH:MM–HH:MM`) from step 2
    - the source marker line: add `<!-- wispr:<meeting id> -->`
    - the raw note text from step 2
    - a remark that speakers appear as `speaker1` / `speaker2` and that the note comes from Wispr Flow
-5. Let `obsidian-journal-add` run to the end (it may ask the user things, e.g. replace or append when a heading already has content). Do not write to the journal yourself.
+5. Let `obsidian-journal-add` run to the end. If the heading already has content, journal-add appends below it (no question). Do not write to the journal yourself.
 
 ---
 
@@ -86,7 +88,7 @@ List any title mismatches or notes not found in the calendar so the user can rev
 
 ## Rules
 
-- Interactive only: never write a note without the user's go-ahead (Step 4.1). This skill is not meant for unattended runs.
+- Never create a new journal entry without the user's go-ahead (Step 4.3); notes that go under an existing matching heading need no confirmation. This skill is not meant for unattended runs.
 - Never write to project files or the journal directly — only through `obsidian-journal-add`.
-- Don't re-import a note whose marker is already in the journal; if the user explicitly wants a re-import, ask whether to replace or append.
+- Don't re-import a note whose marker is already in the journal; if the user explicitly wants a re-import, append it below the existing content.
 - Keep the Wispr share link out of the journal; only the meeting-id marker is stored.

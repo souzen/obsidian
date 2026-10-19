@@ -105,7 +105,7 @@ Heading: `### <Meeting title> (HH:MM–HH:MM) [[project-name]]`
 Heading levels: in an existing file, match the levels it already uses — the meeting heading uses the level of the other meeting headings (normally `###`, one below `## Meetings`), and the note's `Overview` / `Next Steps` / `Decisions` go one level deeper (normally `####`). In a new file use the levels in the template below.
 
 Placement (existing file):
-1. A heading for this meeting already exists (compare titles ignoring the time and links) → insert the note under it. If it already has content, do not duplicate it — ask the user whether to replace or append.
+1. A heading for this meeting already exists (compare titles ignoring the time and links) → insert the note under it, **without asking**. If it already has content, append the note below the existing content and keep that content as it is (the source marker, if any, goes directly under the heading).
 2. `## Meetings` exists but no such heading → append the new block at the end of that section.
 3. No `## Meetings` section → append the section at the end of the file.
 
