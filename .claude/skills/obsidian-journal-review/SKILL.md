@@ -22,7 +22,7 @@ Unattended: never ask. If something can't be done, leave the tag as is and repor
 
 ## Step 1 — Find marked entries
 
-`grep -n -E '#claude-review([^d]|$)' /Users/lsosnicki/obsidian/vault/journal/*.md` — `#claude-reviewed` does not match.
+`grep -n -E '#claude-review($|[^a-zA-Z])' /Users/lsosnicki/obsidian/vault/journal/*.md` — `#claude-reviewed` does not match (a letter follows `review`).
 
 An **entry** is the `###` heading line that carries the tag, plus everything below it up to the next heading of the same or higher level. Its sub-sections are `Overview`, `Next Steps` and `Decisions` (`####`, matched by keyword).
 
