@@ -1,5 +1,5 @@
 ---
-name: prepare-meeting-agenda
+name: obsidian-meeting-any-agenda
 description: >
   Prepares a proposed agenda for any work meeting about a specific project by
   gathering context from the Obsidian vault (the project file's Outcomes, Next
@@ -8,7 +8,7 @@ description: >
   things like "prepare meeting agenda", "przygotuj agendę na spotkanie", "agenda
   na spotkanie o <project>", "przygotuj mnie na spotkanie z <project>", or asks
   for topics/agenda for an upcoming meeting tied to a named project. Unlike
-  prepare-f2f-agenda, this is not for 1:1s and does not use the przepis_na_f2f
+  obsidian-meeting-f2f-agenda, this is not for 1:1s and does not use the przepis_na_f2f
   template — it derives the agenda structure from the project's own sections.
   After presenting the agenda, offers to save it as today's meeting note in the
   journal.

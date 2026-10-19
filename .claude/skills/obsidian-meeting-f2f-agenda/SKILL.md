@@ -1,5 +1,5 @@
 ---
-name: prepare-f2f-agenda
+name: obsidian-meeting-f2f-agenda
 description: >
   Prepares a proposed F2F / 1:1 meeting agenda for a specific person by gathering
   context from the Obsidian vault (journal entries, project files, team files, past

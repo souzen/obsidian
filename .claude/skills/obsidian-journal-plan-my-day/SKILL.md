@@ -1,5 +1,5 @@
 ---
-name: obsidian-plan-my-day
+name: obsidian-journal-plan-my-day
 description: "Creates a structured daily work plan in Obsidian (journal/YYYY-MM-DD.md) from the Outlook calendar. Always use this skill when the user says \"plan my day\", \"what's on my agenda\", \"daily plan\", \"give me an overview of tomorrow\", \"help me prepare for tomorrow\", \"what do I have today\", \"what's tomorrow look like\", or when they want today's/tomorrow's meetings turned into a journal file. Trigger even for loose phrasings like \"what do I have today?\" or \"sort out my day\". Output is always a .md file saved to vault/journal/."
 ---
 
@@ -52,18 +52,18 @@ This skill runs unattended (including via the daily cron) — never ask the user
 | # | Category | Detected when | Agenda | Heading / content in the note |
 |---|---|---|---|---|
 | 1 | **Skipped** | All Day / OOO / private block | none | not written to the note |
-| 2A | **F2F — person file found** | exactly one attendee besides you (`lsosnicki@inpost.pl`) and a person file matches | `prepare-f2f-agenda` | `[[@handle]]` (plus any project links the agenda references) after the heading, then the agenda bullets directly under it — same checkbox format `prepare-f2f-agenda` produces |
+| 2A | **F2F — person file found** | exactly one attendee besides you (`lsosnicki@inpost.pl`) and a person file matches | `obsidian-meeting-f2f-agenda` | `[[@handle]]` (plus any project links the agenda references) after the heading, then the agenda bullets directly under it — same checkbox format `obsidian-meeting-f2f-agenda` produces |
 | 2B | **F2F — no person file** | exactly one attendee besides you, no person file matches | none | the attendee's raw email as a plain line directly below the heading (no formatting, no guessed handle) |
-| 3 | **Company-wide** | title contains (case-insensitive) `All Hands`, `Town Hall`, `Kickoff`, `Company`, `Ogólne`, `Cała firma` | none — never run `prepare-meeting-agenda` | plain heading, even if the title also matches a project filename |
-| 4 | **Project meeting** | title matches a `work/projects/` filename | none — do not run `prepare-meeting-agenda` | `[[project-name]]` after the heading; no agenda |
-| 5 | **Reduced agenda** | no project match, but journal mentions (grep by meeting title) or the calendar description yield something | `prepare-meeting-agenda` Steps 2c–2d only (skip 2a/2b) | agenda bullets directly under the heading; no project link |
+| 3 | **Company-wide** | title contains (case-insensitive) `All Hands`, `Town Hall`, `Kickoff`, `Company`, `Ogólne`, `Cała firma` | none — never run `obsidian-meeting-any-agenda` | plain heading, even if the title also matches a project filename |
+| 4 | **Project meeting** | title matches a `work/projects/` filename | none — do not run `obsidian-meeting-any-agenda` | `[[project-name]]` after the heading; no agenda |
+| 5 | **Reduced agenda** | no project match, but journal mentions (grep by meeting title) or the calendar description yield something | `obsidian-meeting-any-agenda` Steps 2c–2d only (skip 2a/2b) | agenda bullets directly under the heading; no project link |
 | 6 | **Plain** | nothing above matched and 5 found nothing | none | plain heading (expected for one-off syncs with no history — not an error) |
 
 ### Category 2 — F2F resolution (A / B)
 
 - **Detect**: exactly one attendee besides you.
 - **Resolve the handle**: take that attendee's email local-part (before `@`). If it contains a `.` (e.g. a contractor suffix like `.sii`, `.b3`), also try the part before the first `.`. Check whether `work/areas/_4_people/@<candidate>.md` exists for either form.
-  - Match found → **2A**, handle = `@<candidate>`. Run `prepare-f2f-agenda`'s Steps 2–4 (gather context, read the `przepis_na_f2f.md` template, build the agenda) for that handle. Skip its Step 5 confirmation.
+  - Match found → **2A**, handle = `@<candidate>`. Run `obsidian-meeting-f2f-agenda`'s Steps 2–4 (gather context, read the `przepis_na_f2f.md` template, build the agenda) for that handle. Skip its Step 5 confirmation.
   - No match for either form → **2B**. Don't guess a handle, and don't check tags/aliases/other fields as a fallback — carry the attendee's raw email into Step 5 so the user can rename/create the matching person file manually. Example:
     ```
     ### jarek x łukasz (10:45–11:00)
@@ -76,7 +76,7 @@ This skill runs unattended (including via the daily cron) — never ask the user
 - `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — per "Journal meeting entries" in CLAUDE.md.
 - Match → category 4. Just link the project; do not gather context or build an agenda.
 - No match → no project file to ground the agenda in. Run only 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). If either surfaces something → category 5; if both come up empty → category 6.
-- Never run `prepare-meeting-agenda`'s Step 1 user-confirmation prompt or its Step 4 confirmation (category 5 runs only its Steps 2c–2d) — a miss just means no project context, not a blocker.
+- Never run `obsidian-meeting-any-agenda`'s Step 1 user-confirmation prompt or its Step 4 confirmation (category 5 runs only its Steps 2c–2d) — a miss just means no project context, not a blocker.
 
 ---
 
@@ -127,7 +127,7 @@ Also display a **brief chat summary**: meetings for today.
 
 - **No M365 access** → create file with empty Meetings section, add `⚠️ Could not fetch calendar`; skip Step 4 (no calendar data to classify)
 - **Category 2B** → treat as a normal meeting, but still surface the unresolved email below the heading; do not block the rest of the plan on it
-- **Category 3 title also matches a project filename** → company-wide wins (it is checked first); no `prepare-meeting-agenda` run
+- **Category 3 title also matches a project filename** → company-wide wins (it is checked first); no `obsidian-meeting-any-agenda` run
 - **Journal file already has content** → preserve it, fill only placeholders
 - **Planning for tomorrow** → use tomorrow's calendar
 - **Vault unavailable** → print the full plan content to chat/stdout (not just an error message) and inform the user that saving failed, so the plan isn't lost even if nothing gets written to disk

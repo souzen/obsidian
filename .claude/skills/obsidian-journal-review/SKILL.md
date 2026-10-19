@@ -6,7 +6,7 @@ description: >
   and changes the tag to #claude-reviewed. Use this skill whenever the user says "review journal",
   "przejrzyj dziennik", "process journal entries", "move decisions and next steps to projects",
   "przenieś decyzje i next steps do projektów", or asks to handle journal entries tagged #claude-review.
-  Runs unattended every weekday morning (before obsidian-plan-my-day), so it never asks questions.
+  Runs unattended every weekday morning (before obsidian-journal-plan-my-day), so it never asks questions.
 ---
 
 # obsidian-journal-review

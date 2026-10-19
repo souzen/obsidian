@@ -10,10 +10,10 @@ This is an Obsidian vault + Claude Code skills configuration. The actual note co
 
 The vault follows a loose Capture → Organize → Distill → Express flow (CODE), each stage handled by different skills:
 
-- **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-save-to-inbox`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-journal-add`, daily tasks via `obsidian-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
+- **Capture** — raw input lands with minimal friction and no expectation of polish: `inbox/` (articles/PDFs via `obsidian-inbox-add`), `journal/YYYY-MM-DD.md` (meeting notes via `obsidian-journal-add`, daily tasks via `obsidian-journal-plan-my-day`). Mixed Polish/English and voice-dictation artifacts are expected here, not cleaned up yet.
 - **Organize** — captured material is filed into the PARA structure (`work/`, `my/`): action items move out of the journal into the matching project file; completed/paused items eventually move to `archive/` (manual, no skill does this automatically).
 - **Distill** — `obsidian-journal-review` moves the Decisions and Next Steps of journal entries tagged `#claude-review` into the linked project; `obsidian-project-outcomes-review` turns a project's raw next-actions into an outcomes-over-outputs framing and prunes stale/duplicate tasks.
-- **Express** — distilled context becomes something usable in a real conversation: `prepare-f2f-agenda` and `prepare-meeting-agenda` turn accumulated notes into a concrete meeting agenda.
+- **Express** — distilled context becomes something usable in a real conversation: `obsidian-meeting-f2f-agenda` and `obsidian-meeting-any-agenda` turn accumulated notes into a concrete meeting agenda.
 
 Consistency in capturing and reviewing matters more than any single note being polished or perfectly filed — see `inbox/the-code-system-my-way.md`.
 
@@ -57,16 +57,16 @@ These skills drive the main workflows. Each skill file is a detailed step-by-ste
 |---|---|---|
 | `obsidian-journal-add` | "add to journal", "meeting notes", "save to Obsidian" | Appends a meeting note to `journal/YYYY-MM-DD.md` (journal only — never writes to project files) |
 | `obsidian-journal-import-wispr` | "import wispr notes", "add new wispr notes to journal", "sync wispr" | Fetches finalized Wispr Flow notes, skips already imported ones, and runs `obsidian-journal-add` for each (asks before each note) |
-| `obsidian-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
+| `obsidian-journal-plan-my-day` | "plan my day", "what's on my agenda" | Builds today's journal file's Meetings section from the calendar |
 | `obsidian-journal-review` | "review journal", "przejrzyj dziennik" | For journal entries tagged `#claude-review`: copies Decisions into the linked project's Log, appends Next Steps to its Next Actions, then retags `#claude-reviewed` |
 | `obsidian-project-outcomes-review` | "review project", "sprawdź projekt", "przejrzyj projekt", "wygeneruj outcome dla projektu" | Reviews a project file for language quality, outcomes quality, and next-actions relevance |
-| `obsidian-save-to-inbox` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
-| `prepare-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
-| `prepare-meeting-agenda` | "prepare meeting agenda", "przygotuj agendę na spotkanie", "agenda na spotkanie o <project>" | Builds a proposed agenda for a project-related meeting from the project's own Outcomes/Next Actions/Decisions; offers to save as today's meeting note |
+| `obsidian-inbox-add` | "save to vault", "zapisz do vaulta" | Summarises a PDF/URL and writes a structured note to `inbox/` |
+| `obsidian-meeting-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
+| `obsidian-meeting-any-agenda` | "prepare meeting agenda", "przygotuj agendę na spotkanie", "agenda na spotkanie o <project>" | Builds a proposed agenda for a project-related meeting from the project's own Outcomes/Next Actions/Decisions; offers to save as today's meeting note |
 
 ## Journal file format
 
-Daily notes follow this structure (populated by the `plan-my-day` skill using the template at `vault/work/resources/tools/obsidian/templates/daily.md`):
+Daily notes follow this structure (populated by the `obsidian-journal-plan-my-day` skill using the template at `vault/work/resources/tools/obsidian/templates/daily.md`):
 
 ```markdown
 ## Meetings           # ### Title [[project-link]] subsections
@@ -105,7 +105,7 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 
 A launchd job runs the daily flow unattended on weekdays:
 
-- `~/Library/LaunchAgents/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-journal-review, then run skill obsidian-plan-my-day."` Mon–Fri (currently 08:00).
+- `~/Library/LaunchAgents/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-journal-review, then run skill obsidian-journal-plan-my-day."` Mon–Fri (currently 08:00).
 - Logs: `~/Library/Logs/obsidian-plan-my-day.log`
 - After editing the plist, reload it: `launchctl unload` then `launchctl load` the file.
 

@@ -1,5 +1,5 @@
 ---
-name: obsidian-save-to-inbox
+name: obsidian-inbox-add
 description: Saves uploaded files (PDF, DOCX, image) or web article URLs as structured Markdown summary notes to the user's Obsidian vault inbox. Trigger whenever the user wants to "add to Obsidian", "save to vault", "zapisz do vaulta", "wrzuć do Obsidian", or store any file/link in their notes system.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: obsidian-close-project
+name: obsidian-project-close
 description: >
   Closes (archives) an Obsidian project: stamps date-resolved in the project file, moves it to
   the archive/<current year>/ folder, removes its card from the kanban board and adds a card to
