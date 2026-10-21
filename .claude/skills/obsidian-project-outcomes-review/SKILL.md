@@ -91,14 +91,14 @@ Confirm: `✅ Language corrections saved to <filename>`
 
 ## Phase 2 — Outcomes Review
 
-**Goal:** Ensure the `### Outcomes` section exists and follows the Outcomes over Outputs principle.
+**Goal:** Ensure the `## Outcomes` section exists and follows the Outcomes over Outputs principle.
 
 Read the full reference before this phase:
 → See `references/outcomes-over-outputs.md`
 
 ### Step 2a — Check section existence
 
-Look for a `### Outcomes` section (also accept `### Cele`, `### Wyniki`, `### Rezultaty`).
+Look for a `## Outcomes` section (also accept `## Cele`, `## Wyniki`, `## Rezultaty`).
 
 **If section is missing, OR exists but contains only placeholder text (`todo`, `TBD`, `outcomes`, or empty):**
 > "This project has no Outcomes section yet. I'll help you create one — see the questions below."
@@ -155,7 +155,7 @@ Example:
 
 ### Step 2d — Propose changes
 
-Present the proposed `### Outcomes` section in full. Ask:
+Present the proposed `## Outcomes` section in full. Ask:
 
 > "Should I replace the Outcomes section with this? (yes / edit first / skip)"
 
@@ -171,7 +171,7 @@ On "skip" → move to Phase 3 without saving.
 
 ### Step 3a — Read current next actions, decisions, and questions
 
-Find `### Next Actions` (also accept `### Następne kroki`, `### TODO`, `### Tasks`), `Decisions`, and `Questions` — match by keyword, not a fixed heading level: the current project template nests these as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Log %% fold %%` parent, but older project files still use them as flat `###` sections. Handle both.
+Find `## Next Actions` (also accept `## Następne kroki`, `## TODO`, `## Tasks`), `Decisions`, and `Questions` — match by keyword, not a fixed heading level: the current project template nests these as `### Decisions` / `### Questions` / `### Issues` under a `## Log %% fold %%` parent, but older project files still use `###` top-level sections and flat `###` (or `####` under `### Log`) for these. Handle both.
 
 Extract:
 - `- [ ]` open tasks, `- [x]` completed tasks (for context only)
@@ -206,7 +206,7 @@ Look for tasks or updates that relate back to this project.
 ```
 Do not bury this as a "Priority signal" bullet inside the task diff — it changes the meaning of everything below it.
 
-Then compare gathered context against current `### Next Actions`. Identify:
+Then compare gathered context against current `## Next Actions`. Identify:
 
 | Finding | Example |
 |---|---|
@@ -219,7 +219,7 @@ Then compare gathered context against current `### Next Actions`. Identify:
 
 ### Step 3d — Present proposed changes
 
-Show a clear diff of the proposed `### Next Actions` section:
+Show a clear diff of the proposed `## Next Actions` section:
 
 ```
 ## Phase 3 — Next Actions Review
@@ -263,8 +263,8 @@ Phase 3 — Next Actions: N changes applied / Skipped
 | Situation | Behaviour |
 |---|---|
 | File not found | Ask user to confirm path or pick from list |
-| No `### Outcomes` section, or section has only placeholder text (`todo`, `TBD`, empty) | Skip directly to interview (Step 2c) |
-| No `### Next Actions` section | Note it, offer to create the section |
+| No `## Outcomes` section, or section has only placeholder text (`todo`, `TBD`, empty) | Skip directly to interview (Step 2c) |
+| No `## Next Actions` section | Note it, offer to create the section |
 | User says "generate outcome for X" / "wygeneruj outcome dla projektu X" | Treat as "only check outcomes" — Phase 2 only |
 | Project is a personal project (`my/projects/`, tags like `firearms`, `mind-n-body`, hobby-related) | In Step 2c, swap the "business impact" question for "Why does this matter to you personally — safety, skill, health, relationships?"; don't require a business framing |
 | Journal dir empty / no recent entries | Skip journal lookup, continue with backlinks |

@@ -28,10 +28,10 @@ The skill adapts the team workshop to a solo setting: Claude pre-fills candidate
 If the user gave a full path → use it. If they gave a name → `ls` both project dirs, match case-insensitively ignoring dashes/spaces; if ambiguous, ask the user to pick.
 
 Read the project file and extract:
-- `### Outcomes` (also `### Cele`, `### Wyniki`, `### Rezultaty`) — this defines what "success" means, so what "failure" means
-- `### Next Actions` (also `### Następne kroki`, `### TODO`, `### Tasks`), `Decisions`, `Questions`, `Issues` (flat `###` or nested `####` under `### Log`)
+- `## Outcomes` (also `## Cele`, `## Wyniki`, `## Rezultaty`) — this defines what "success" means, so what "failure" means
+- `## Next Actions` (also `## Następne kroki`, `## TODO`, `## Tasks`), `Decisions`, `Questions`, `Issues` (nested `###` under `## Log` in the current template; older files have flat `###` sections or `####` under `### Log`)
 - Frontmatter people/teams (`owner`, `co-owner`, `EM`, `PM`, `SEM`, `members`, `team`) and body `[[...]]` links
-- An existing `Premortem` subsection (normally `#### Premortem` under `### Log`; also accept a flat `###` one), if any
+- An existing `Premortem` subsection (normally `### Premortem` under `## Log`; also accept `####` under `### Log` or a flat `###` one in older files), if any
 
 **If Outcomes is missing or placeholder (`todo`, `TBD`, empty):** a premortem needs a definition of success. Tell the user, and ask for one sentence: "What does success look like for this project?" Offer to run `obsidian-project-outcomes-review` for a proper outcome. Do not proceed on an undefined goal.
 
@@ -117,20 +117,20 @@ Phrase each as a task the user could do next, with an owner `[[@handle]]` when t
 
 Present the mitigations and ask:
 
-> "Which mitigations should I add to `### Next Actions`? (all / pick individually / none)"
+> "Which mitigations should I add to `## Next Actions`? (all / pick individually / none)"
 
 ---
 
 ## Phase 6 — Save
 
-Show the full proposed `#### Premortem` subsection, then ask: "Save to the project file? (yes / edit first / skip)". On "yes", write with the Write tool.
+Show the full proposed `### Premortem` subsection, then ask: "Save to the project file? (yes / edit first / skip)". On "yes", write with the Write tool.
 
-**Placement:** a `#### Premortem` subsection nested under `### Log %% fold %%`, alongside `#### Decisions` / `#### Questions` / `#### Issues`. Append it after the last existing subsection of the Log. If the project file has no `### Log` section (older files), create `### Log  %% fold %%` at the end of the file and put the subsection there. Do not touch other sections' content except appending confirmed mitigations to `### Next Actions` as `- [ ]` items prefixed so they are traceable, e.g. `- [ ] (premortem) <action>`.
+**Placement:** a `### Premortem` subsection nested under `## Log %% fold %%`, alongside `### Decisions` / `### Questions` / `### Issues`. Append it after the last existing subsection of the Log. If the project file has no `## Log` section (older files), create `## Log  %% fold %%` at the end of the file and put the subsection there. Do not touch other sections' content except appending confirmed mitigations to `## Next Actions` as `- [ ]` items prefixed so they are traceable, e.g. `- [ ] (premortem) <action>`.
 
 **Format:**
 
 ```markdown
-#### Premortem
+### Premortem
 
 *Run: YYYY-MM-DD · horizon: 6 months · failure = <outcome not achieved>*
 

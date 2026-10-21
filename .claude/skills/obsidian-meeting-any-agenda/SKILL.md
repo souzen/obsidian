@@ -43,14 +43,14 @@ Run these lookups in parallel where possible:
 
 ### 2a — The project file itself (already read in Step 1)
 Extract, section by section:
-- `### Outcomes` — the goal, so the agenda stays anchored to it. If the section is missing entirely (not just placeholder text), fall back to the project's top-level description or a linked strategy doc from Resources, and say explicitly that no Outcomes section exists yet
-- `### Next Actions` — open (`- [ ]`) items, especially any with an owner tag
+- `## Outcomes` — the goal, so the agenda stays anchored to it. If the section is missing entirely (not just placeholder text), fall back to the project's top-level description or a linked strategy doc from Resources, and say explicitly that no Outcomes section exists yet
+- `## Next Actions` — open (`- [ ]`) items, especially any with an owner tag
 - Decisions — anything unresolved (placeholder text like `todo`/`decisions` means none logged yet — skip it)
 - Questions — open questions
 - Issues — open issues/blockers
 - Resources — links (Jira, Confluence, SharePoint). List them for reference; do not fetch external URLs unless the user explicitly asks
 
-Decisions/Questions/Issues/Resources: match by keyword, not a fixed heading level. The current project template nests Decisions/Questions/Issues as `#### Decisions` / `#### Questions` / `#### Issues` under a `### Log %% fold %%` parent, with `### Resources` moved earlier — but older project files still use all of these as flat `###` sections. Handle both.
+Decisions/Questions/Issues/Resources: match by keyword, not a fixed heading level. The current project template nests Decisions/Questions/Issues as `### Decisions` / `### Questions` / `### Issues` under a `## Log %% fold %%` parent, with `## Resources` moved earlier — but older project files still use `###` for the top-level sections and flat `###` (or `####` under `### Log`) for these. Handle both.
 
 ### 2b — People and teams linked to the project
 From frontmatter (`owner`, `co-owner`, `EM`, `PM`, `SEM`, `members`, `team`) and any `[[@handle]]` mentions in the body. For each, note their role — this tells you who should be in the room / whose open items matter here.
@@ -63,7 +63,7 @@ Plain-text names in the body with no `[[@handle]]` link (e.g. an external contac
 Read matching files — look for:
 - Past meeting notes about this project
 - Decisions or blockers logged that haven't made it into the project file's Decisions/Issues section yet (a gap worth flagging)
-- Action items about this project that aren't yet in `### Next Actions`
+- Action items about this project that aren't yet in `## Next Actions`
 
 ### 2d — Today's calendar entry (optional context)
 Find the meeting per "Journal meeting entries" in CLAUDE.md: search the calendar for the project name/keywords, or use an existing `### <title> [[project-name]]` heading already in today's journal if present. Note title/time — this becomes the meeting to attach the saved note to in Step 4.
@@ -76,11 +76,11 @@ If that journal heading **already has content under it**, treat it as additional
 
 There is no fixed template — derive the shape from what Step 2 actually found. A typical shape:
 
-- **Status / recap** — current state vs. `### Outcomes`, recent progress from journal (2c)
+- **Status / recap** — current state vs. `## Outcomes`, recent progress from journal (2c)
 - **Decyzje do podjęcia** — open Decisions and any Next Actions that are really decisions in disguise
 - **Otwarte pytania** — Questions
 - **Blokery** — Issues
-- **Next steps** — remaining `### Next Actions`, with the linked people (2b) who'd own each
+- **Next steps** — remaining `## Next Actions`, with the linked people (2b) who'd own each
 
 Output the agenda as a bullet list (`-`), not a numbered list — including when saving it into the journal (Step 4).
 

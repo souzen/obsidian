@@ -42,10 +42,10 @@ Read the journal file first. Then for each entry:
 
 ### 2b — Decisions → project Log
 
-If the entry has a `Decisions` sub-section, read the project file and add this block as the **first** entry in its `### Log` section (match the heading by keyword `Log`, directly under the section's intro line, above older entries):
+If the entry has a `Decisions` sub-section, read the project file and add this block as the **first** entry in its `## Log` section (match the heading by keyword `Log`, directly under the section's intro line, above older entries):
 
 ```markdown
-#### Decisions - <Title> [[<YYYY-MM-DD>]]
+### Decisions - <Title> [[<YYYY-MM-DD>]]
 
 - <decision>
 - <decision>
@@ -53,12 +53,13 @@ If the entry has a `Decisions` sub-section, read the project file and add this b
 ```
 
 - Bullets are copied unchanged.
-- Already there (same `#### Decisions - <Title> [[<YYYY-MM-DD>]]` heading) → skip, nothing to add.
+- Heading level: `###` under the current template's `## Log`; if the project is an older file whose Log is `### Log`, use `####` instead.
+- Already there (same `### Decisions - <Title> [[<YYYY-MM-DD>]]` heading) → skip, nothing to add.
 - Project has no `Log` section → skip the entry, leave the tag, report.
 
 ### 2c — Next Steps → project Next Actions
 
-If the entry has a `Next Steps` sub-section, append its items at the **bottom of the project's `### Next Actions` list** (after the last item, before the next heading), as top-level items exactly as written (`- [ ] … [[@assignee]]`).
+If the entry has a `Next Steps` sub-section, append its items at the **bottom of the project's `## Next Actions` list** (after the last item, before the next heading), as top-level items exactly as written (`- [ ] … [[@assignee]]`).
 
 - An item whose text is already in that section (compared after trimming) → skip it.
 - Project has no `Next Actions` section → skip the entry, leave the tag, report.
