@@ -72,10 +72,12 @@ Take the user's raw notes and:
 - Keep decisions, numbers, dates, names, owners, deadlines, risks. Never shorten or drop a Next Step or a Decision.
 - Plain words; no intro phrases like "the team discussed that…".
 
-**People rule** — applies only to `Next Steps`; leave people mentioned in the summary, `Overview` and `Decisions` exactly as written, no links:
+**People rule** — replace every person name, everywhere in the note, with a handle:
+- First and last name known → `@flastname`: first letter of the first name + last name, lowercase, no special characters (Łukasz Sośnicki → `@lsosnicki`).
+- First or last name unknown → use what you have as `@person` or `@group`, lowercase.
+- Only in `Next Steps` is the handle a wikilink to the person file (`[[@lsosnicki]]`); handles with an unknown first or last name are never linked.
+- Every handle that is not a wikilink is written in bold (`**@lsosnicki**`, `**@person**`, `**@group**`).
 - Put the assignees at the **end** of each Next Step, after the action text.
-- First and last name known → `[[@flastname]]`: first letter of the first name + last name, lowercase, no special characters (Łukasz Sośnicki → `[[@lsosnicki]]`).
-- First or last name unknown → keep what you have as `@person` or `@group`, lowercase, no wikilink.
 
 ---
 
