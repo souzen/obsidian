@@ -2,8 +2,8 @@
 name: obsidian-journal-review
 description: >
   Processes journal entries marked with the tag #claude-review: copies the entry's Decisions into the
-  Log of the project linked in the entry title, appends its Next Steps to that project's Next Actions,
-  and changes the tag to #claude-reviewed. Use this skill whenever the user says "review journal",
+  Log of the project linked in the entry title, moves its Next Steps to that project's Next Actions
+  (removing them from the entry), and changes the tag to #claude-reviewed. Use this skill whenever the user says "review journal",
   "przejrzyj dziennik", "process journal entries", "move decisions and next steps to projects",
   "przenieś decyzje i next steps do projektów", or asks to handle journal entries tagged #claude-review.
   Runs unattended every weekday morning (before obsidian-journal-plan-my-day), so it never asks questions.
@@ -11,14 +11,14 @@ description: >
 
 # obsidian-journal-review
 
-For every journal entry tagged `#claude-review`: with a linked project, pushes its **Decisions** and **Next Steps** into the project; for an f2f entry, unlinks the person's handle; then marks the entry `#claude-reviewed`. No language correction, no day summary. Unattended: never ask, report what can't be done.
+For every journal entry tagged `#claude-review`: with a linked project, copies its **Decisions** into the project Log and moves its **Next Steps** into the project's Next Actions (removing them from the entry); for an f2f entry, unlinks the person's handle; then marks the entry `#claude-reviewed`. No language correction, no day summary. Unattended: never ask, report what can't be done.
 
 **Journal dir:** `/Users/lsosnicki/obsidian/vault/journal/` (skip `archive/`)
 **Projects:** `/Users/lsosnicki/obsidian/vault/work/projects/`, then `/Users/lsosnicki/obsidian/vault/my/projects/`
 
 **Rules**
 - Edit **in place** with the Edit tool; never rewrite a whole file.
-- Only change: the tag and hour in the journal heading, the project's `Log` and `Next Actions`, the f2f person's `[[@handle]]` links below the heading of their entry.
+- Only change: the tag and hour in the journal heading, the entry's `Next Steps` that were moved to the project (Step 2c), the project's `Log` and `Next Actions`, the f2f person's `[[@handle]]` links below the heading of their entry.
 - Never touch entries tagged `#claude-reviewed`.
 
 ---
@@ -59,7 +59,15 @@ If the entry has `Decisions`, add this block as the **first** entry of the proje
 
 If the entry has `Next Steps`, append its items at the **bottom of the project's `## Next Actions` list**, as top-level items exactly as written (`- [ ] … [[@assignee]]`).
 
-- Item already in the section (trimmed) → skip it. No `Next Actions` section → skip 2b, note for the report.
+- Item already in the section (trimmed) → skip it. No `Next Actions` section → skip 2b and 2c, note for the report.
+
+### 2c — Remove the moved Next Steps from the entry
+
+After 2b, delete from the entry's `Next Steps` every item that is now in the project — both the ones just appended and the ones that were already there — together with its indented sub-items.
+
+- Items that could not be moved stay in the entry.
+- If no item is left, delete the whole `Next Steps` sub-section: its heading and the blank lines after it.
+- `Decisions` and `Overview` are never removed — only copied (Decisions) or left as is.
 
 ---
 
@@ -83,7 +91,7 @@ For every entry, whatever Steps 2–3 did, edit the heading: `#claude-review` �
 
 ```
 ✅ Journal review: N entries reviewed (N project, N f2f, N other)
-- 2026-10-19 · <Title> → [[project]] — decisions: added / already there / none / no Log section · next steps: N added, N already there / none / no Next Actions section
+- 2026-10-19 · <Title> → [[project]] — decisions: added / already there / none / no Log section · next steps: N moved (N added, N already there; removed from the entry) / none / no Next Actions section (kept in the entry)
 - 2026-10-19 · <Title> — f2f with @person: N links unlinked
 - 2026-10-19 · <Title> — nothing moved: <no project or person linked / several linked>
 ```
