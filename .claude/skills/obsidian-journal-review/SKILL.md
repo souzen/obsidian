@@ -11,14 +11,15 @@ description: >
 
 # obsidian-journal-review
 
-For every journal entry tagged `#claude-review`: with a linked project, copies its **Decisions** into the project Log and moves its **Next Steps** into the project's Next Actions (removing them from the entry); for an f2f entry, unlinks the person's handle; then marks the entry `#claude-reviewed`. No language correction, no day summary. Unattended: never ask, report what can't be done.
+For every journal entry tagged `#claude-review`: with a linked project, copies its **Decisions** into the project Log and moves its **Next Steps** into the project's Next Actions (removing them from the entry); for an f2f entry, moves its **Next Steps** into the person's Talking points (removing them from the entry) and unlinks the person's handle; then marks the entry `#claude-reviewed`. No language correction, no day summary. Unattended: never ask, report what can't be done.
 
 **Journal dir:** `/Users/lsosnicki/obsidian/vault/journal/` (skip `archive/`)
 **Projects:** `/Users/lsosnicki/obsidian/vault/work/projects/`, then `/Users/lsosnicki/obsidian/vault/my/projects/`
+**People:** `/Users/lsosnicki/obsidian/vault/work/areas/_4_people/@<handle>.md`
 
 **Rules**
 - Edit **in place** with the Edit tool; never rewrite a whole file.
-- Only change: the tag and hour in the journal heading, the entry's `Next Steps` that were moved to the project (Step 2c), the project's `Log` and `Next Actions`, the f2f person's `[[@handle]]` links below the heading of their entry.
+- Only change: the tag and hour in the journal heading, the entry's `Next Steps` that were moved to the project or person (Steps 2c, 3b), the project's `Log` and `Next Actions`, the person's `Talking points`, the f2f person's `[[@handle]]` links below the heading of their entry.
 - Never touch entries tagged `#claude-reviewed`.
 
 ---
@@ -75,9 +76,21 @@ After 2b, delete from the entry's `Next Steps` every item that is now in the pro
 
 **Person:** a `[[@handle]]` in the heading. Applies only when Step 2 found no project and exactly one person is linked. Otherwise skip this step.
 
-### 3a — Unlink the handle
+**Person file:** `@handle.md` in the People dir. Missing → skip 3a and 3b, note for the report.
 
-In the entry's sub-sections (everything below the heading) replace each `[[@handle]]` with `@handle`. The `[[@handle]]` in the heading stays linked, as do all other links. Nothing is written to the person note.
+### 3a — Next Steps → person's Talking points
+
+If the entry has `Next Steps`, append its items at the **bottom of the person file's `Talking points` section** (heading matched by keyword, any level), as top-level items exactly as written, except that every `[[@handle]]` of this person becomes `@handle`. Other links stay.
+
+- Item already in the section (trimmed, after unlinking) → skip it. No `Talking points` section → skip 3a and 3b, note for the report.
+
+### 3b — Remove the moved Next Steps from the entry
+
+Same as 2c: delete every item that is now in the person file (just appended or already there) with its indented sub-items; delete the whole `Next Steps` sub-section if nothing is left. Items that could not be moved stay.
+
+### 3c — Unlink the handle in the entry
+
+In the entry's sub-sections (everything below the heading) replace each remaining `[[@handle]]` with `@handle`. The `[[@handle]]` in the heading stays linked, as do all other links.
 
 ---
 
@@ -92,6 +105,6 @@ For every entry, whatever Steps 2–3 did, edit the heading: `#claude-review` �
 ```
 ✅ Journal review: N entries reviewed (N project, N f2f, N other)
 - 2026-10-19 · <Title> → [[project]] — decisions: added / already there / none / no Log section · next steps: N moved (N added, N already there; removed from the entry) / none / no Next Actions section (kept in the entry)
-- 2026-10-19 · <Title> — f2f with @person: N links unlinked
+- 2026-10-19 · <Title> — f2f with @person: next steps: N moved to Talking points (N added, N already there; removed from the entry) / none / no person file / no Talking points section (kept in the entry) · N links unlinked
 - 2026-10-19 · <Title> — nothing moved: <no project or person linked / several linked>
 ```
