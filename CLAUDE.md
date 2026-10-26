@@ -66,10 +66,11 @@ These skills drive the main workflows. Each skill file is a detailed step-by-ste
 
 ## Templates
 
-`vault/work/resources/tools/obsidian/templates/` holds the latest templates for new notes: `daily.md` (journal), `project.md` and `@person.md`. The other files in that folder are older period notes (weekly, monthly, quarterly, yearly).
+`vault/work/resources/tools/obsidian/templates/` holds the latest templates for new notes: `daily.md` (journal), `project.md`, `@person.md` and `~team.md`. The other files in that folder are older period notes (weekly, monthly, quarterly, yearly).
 
 - **`project.md`** — frontmatter (`tags`, `date-added`), then `## Outcomes`, `## Next Actions`, `## Resources`, `## Log %% fold %%` (Decisions, Questions, Issues, Messages)
 - **`@person.md`** — `## Talking points` (checkboxes to raise with the person), `## Log %% fold %%` (Decisions, Questions, Issues, Messages)
+- **`~team.md`** — frontmatter (`EM`, `PM`, `members`), then `## Log %% fold %%` (Decisions, Questions, Issues, Messages)
 
 Existing notes may predate a template (e.g. person notes use `### Talking points`), so skills match headings by keyword, not by fixed level.
 
@@ -98,8 +99,10 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 
 - **Vault path**: always `~/obsidian/vault` (not the git repo root)
 - **Project links**: `[[project-name]]` in headings — the name is the project filename without `.md`
-- **People links**: `[[@handle]]` — handle = file name under `work/areas/people/`
-- **Team links**: `[[~team-slug]]` — team notes are named `~<slug>.md` under `work/areas/people/teams/` (recurse into subfolders). The `~` prefix, not the subfolder, is what identifies a team note.
+- **Note name prefixes** identify the note type, wherever the file sits: `@` person (`@handle.md`), `~` team (`~slug.md`), `$` system (`$name.md`, linked as `[[$name]]`). Projects have no prefix.
+- **People links**: `[[@handle]]` — handle = file name under `work/areas/_4_people/`
+- **Team links**: `[[~team-slug]]` — team notes are named `~<slug>.md` under `work/areas/_4_people/teams/` (recurse into subfolders). The `~` prefix, not the subfolder, is what identifies a team note.
+- **System links**: `[[$name]]` — system notes are named `$<name>.md` (e.g. `work/areas/_2_gokart/sc/$feeder.md`). The `$` prefix, not the folder, is what identifies a system note.
 - **Person notes**: follow `templates/@person.md` — `Talking points` (running task checkboxes about things to raise/follow up with that person; `obsidian-journal-review` appends f2f Next Steps here) and `Log`, plus inline `[[...]]` links to teams/projects. Older notes may be empty or have a loose `### Goals` section. Don't impose frontmatter that isn't already there.
 - **Action items**: saved to the matching project file, not left in the journal
 - **Language**: notes are mixed Polish/English; detect per-section, never translate
