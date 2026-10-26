@@ -64,6 +64,15 @@ These skills drive the main workflows. Each skill file is a detailed step-by-ste
 | `obsidian-meeting-f2f-agenda` | "prepare f2f agenda", "przygotuj agendę na f2f", "agenda na spotkanie z @X" | Builds a proposed 1:1 agenda for a person from vault context (projects, teams, journal); offers to save as today's meeting note |
 | `obsidian-meeting-any-agenda` | "prepare meeting agenda", "przygotuj agendę na spotkanie", "agenda na spotkanie o <project>" | Builds a proposed agenda for a project-related meeting from the project's own Outcomes/Next Actions/Decisions; offers to save as today's meeting note |
 
+## Templates
+
+`vault/work/resources/tools/obsidian/templates/` holds the latest templates for new notes: `daily.md` (journal), `project.md` and `@person.md`. The other files in that folder are older period notes (weekly, monthly, quarterly, yearly).
+
+- **`project.md`** — frontmatter (`tags`, `date-added`), then `## Outcomes`, `## Next Actions`, `## Resources`, `## Log %% fold %%` (Decisions, Questions, Issues, Messages)
+- **`@person.md`** — `## Talking points` (checkboxes to raise with the person), `## Log %% fold %%` (Decisions, Questions, Issues, Messages)
+
+Existing notes may predate a template (e.g. person notes use `### Talking points`), so skills match headings by keyword, not by fixed level.
+
 ## Journal file format
 
 Daily notes follow this structure (populated by the `obsidian-journal-plan-my-day` skill using the template at `vault/work/resources/tools/obsidian/templates/daily.md`):
@@ -91,7 +100,7 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 - **Project links**: `[[project-name]]` in headings — the name is the project filename without `.md`
 - **People links**: `[[@handle]]` — handle = file name under `work/areas/people/`
 - **Team links**: `[[~team-slug]]` — team notes are named `~<slug>.md` under `work/areas/people/teams/` (recurse into subfolders). The `~` prefix, not the subfolder, is what identifies a team note.
-- **Person notes**: freeform, no fixed template — running task checkboxes (`- [ ]`/`- [x]`) about things to raise/follow up with that person, occasionally a loose `### Goals` section, plus inline `[[...]]` links to teams/projects. Many are empty. Don't impose headings or frontmatter that aren't already there.
+- **Person notes**: follow `templates/@person.md` — `Talking points` (running task checkboxes about things to raise/follow up with that person; `obsidian-journal-review` appends f2f Next Steps here) and `Log`, plus inline `[[...]]` links to teams/projects. Older notes may be empty or have a loose `### Goals` section. Don't impose frontmatter that isn't already there.
 - **Action items**: saved to the matching project file, not left in the journal
 - **Language**: notes are mixed Polish/English; detect per-section, never translate
 - **Meeting titles**: strip time patterns (`HH:MM`, `HH:MM–HH:MM`) before using as headings
