@@ -80,9 +80,9 @@ After 2b, delete from the entry's `Next Steps` every item that is now in the pro
 
 ### 3a — Next Steps → person's Talking points
 
-If the entry has `Next Steps`, append its items at the **bottom of the person file's `Talking points` section** (heading matched by keyword, any level), as top-level items exactly as written, except that every `[[@handle]]` of this person becomes `@handle`. Other links stay.
+If the entry has `Next Steps`, append its items at the **bottom of the person file's `Talking points` section** (heading matched by keyword, any level), as top-level items exactly as written, except that every `[[@handle]]` of this person is removed (trim the leftover spaces). Other links stay.
 
-- Item already in the section (trimmed, after unlinking) → skip it. No `Talking points` section → skip 3a and 3b, note for the report.
+- Item already in the section (trimmed, after removing the handle) → skip it. No `Talking points` section → skip 3a and 3b, note for the report.
 
 ### 3b — Remove the moved Next Steps from the entry
 
