@@ -7,6 +7,7 @@ description: >
   "import wispr notes", "add new wispr notes to journal", "sync wispr", "load latest note from wispr",
   "zaimportuj notatki z wispr", "dodaj notatki z wispr do dziennika", "są nowe notatki we wispr?".
   Interactive — it asks only before creating a new journal entry; notes for meetings already in the journal are added without asking.
+  Also runs unattended every hour (10:00–17:00) on workdays (launchd), where it never asks and skips notes that would need a new entry.
 ---
 
 # Obsidian Journal Import — Wispr Flow
@@ -69,7 +70,7 @@ Notes are processed sequentially — they edit the same journal file.
 For each new note:
 
 1. **Fetch the note:** `mcp__wispr-flow__get_meeting` with the meeting id. Use the `summary` (it holds the Overview / Next Steps / Decisions) plus `content` if present. Use the transcript (`view_transcript`) only when the summary is empty or clearly insufficient. Retry once on a connection error.
-2. **Confirm — only for a new entry** (no matching heading): ask "Import '<title>' (HH:MM–HH:MM)? It will create a new entry." — options: import / skip / stop. A note that goes under an existing heading needs no confirmation.
+2. **Confirm — only for a new entry** (no matching heading). Unattended run (`claude -p`, no user to answer): never ask — skip the note, report it as "skipped: needs new entry" and move on. Otherwise ask "Import '<title>' (HH:MM–HH:MM)? It will create a new entry." — options: import / skip / stop. A note that goes under an existing heading needs no confirmation.
 3. **Invoke `obsidian-journal-add`** with the Skill tool. Pass in the args:
    - the date (`YYYY-MM-DD`)
    - the meeting title and time (`HH:MM–HH:MM`) from step 3
@@ -92,7 +93,7 @@ List any title mismatches or notes not found in the calendar so the user can rev
 
 ## Rules
 
-- Never create a new journal entry without the user's go-ahead (Step 4.2); notes that go under an existing matching heading need no confirmation. This skill is not meant for unattended runs.
+- Never create a new journal entry without the user's go-ahead (Step 4.2); notes that go under an existing matching heading need no confirmation. When unattended, skip such notes instead of asking; they stay un-imported and a later interactive run picks them up.
 - Never write to project files or the journal directly — only through `obsidian-journal-add`.
 - Don't re-import a note whose meeting already has an `Overview` in the journal; if the user explicitly wants a re-import, append it below the existing content.
 - Keep Wispr identifiers and share links out of the journal — no markers, ids or links are written.
