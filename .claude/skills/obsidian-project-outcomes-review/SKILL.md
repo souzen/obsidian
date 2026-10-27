@@ -155,6 +155,19 @@ Example:
 
 ### Step 2d — Propose changes
 
+Write the section in the layout used by the other projects: the outcome as a plain paragraph, then a bold `**Success signal:**` line followed by one bullet per signal (a single signal may go on one `Success signal: ...` line instead). Do not inline "Signal: ..." inside outcome bullets.
+
+```markdown
+## Outcomes
+
+<outcome paragraph>
+
+**Success signal:**
+
+- <signal 1>
+- <signal 2>
+```
+
 Present the proposed `## Outcomes` section in full. Ask:
 
 > "Should I replace the Outcomes section with this? (yes / edit first / skip)"
