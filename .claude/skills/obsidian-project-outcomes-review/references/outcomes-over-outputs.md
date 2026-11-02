@@ -78,7 +78,7 @@ When evaluating an outcome statement, ask:
 
 - Writing a task as an outcome: *"Deliver observability tooling"* — this is still a deliverable
 - Writing an impact as an outcome: *"Improve company resilience"* — too abstract, not observable
-- Writing an output metric as an outcome: *"Ship 5 features this quarter"* — this is measuring output
+- Writing an output metric as an outcome: *"Ship 5 features this quarter"* — this is measuring output (see `input-vs-output-metrics.md` for checking the Success signal itself)
 - Passive voice hiding the absence of a beneficiary: *"Incidents will be reduced"* — by whom? observed by whom?
 
 ---

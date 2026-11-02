@@ -93,8 +93,9 @@ Confirm: `✅ Language corrections saved to <filename>`
 
 **Goal:** Ensure the `## Outcomes` section exists and follows the Outcomes over Outputs principle.
 
-Read the full reference before this phase:
-→ See `references/outcomes-over-outputs.md`
+Read the full references before this phase:
+→ See `references/outcomes-over-outputs.md` (the outcome statement)
+→ See `references/input-vs-output-metrics.md` (the Success signal)
 
 ### Step 2a — Check section existence
 
@@ -119,8 +120,11 @@ For each outcome listed, check:
 | Measurable or observable | "Better performance" | "P99 latency drops below 200ms" |
 | User/customer/business focused | "Refactor auth module" | "Users no longer get logged out mid-session" |
 | Not just a feature shipped | "Add export button" | "Finance team exports reports without dev help" |
+| Signal measures a result, not effort | "20 training hours completed" | "Customer service ratings rise from 3.8 to 4.3" |
 
 Flag any outcome that looks like an **output** (deliverable, feature, task) rather than an outcome (behavioral change, measurable improvement).
+
+Also check each `Success signal` against `references/input-vs-output-metrics.md`: flag signals that count effort or activity (hours, tasks, features shipped, spend, LOC/commits/PR counts) and suggest a result metric instead.
 
 Show the evaluation in chat:
 
@@ -146,6 +150,8 @@ Ask targeted questions (max 3 at a time, conversationally):
 3. **How would we know it worked?** "What would we observe or measure that tells us it worked?"
 4. **What's the business impact?** "Does this reduce cost, increase revenue, reduce risk, or improve satisfaction?"
 
+If the answer to question 3 is an input or activity metric, follow up with: "If this number moved, would the beneficiary notice? What result should it produce?" (more questions in `references/input-vs-output-metrics.md`).
+
 Based on answers, draft outcome candidates in this format:
 
 > `[WHO] [can/will/no longer] [BEHAVIOR] [measurable signal]`
@@ -166,7 +172,10 @@ Write the section in the layout used by the other projects: the outcome as a pla
 
 - <signal 1>
 - <signal 2>
+- Driver (leading): <input or leading metric>
 ```
+
+Signals are result metrics. Add the `Driver (leading)` bullet only when the user supplied or confirmed one — never invent it.
 
 Present the proposed `## Outcomes` section in full. Ask:
 
