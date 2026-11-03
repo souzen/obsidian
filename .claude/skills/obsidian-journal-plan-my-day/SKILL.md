@@ -76,6 +76,15 @@ This skill runs unattended (including via the daily cron) — never ask the user
 - `ls work/projects/` and match the meeting title case-insensitively against a filename, ignoring dashes/spaces — per "Journal meeting entries" in CLAUDE.md.
 - Match → category 4. Just link the project; do not gather context or build an agenda.
 - No match → no project file to ground the agenda in. Run only 2c (journal mentions, grep by meeting title instead of project name) and 2d (calendar). If either surfaces something → category 5; if both come up empty → category 6.
+### Categories 5–6 — carry over links from the previous occurrence
+
+Applies to a meeting with no project match (category 5 or 6) that recurs **weekly or bi-weekly** (7- or 14-day interval in the calendar's recurrence pattern; daily and other patterns are excluded).
+
+- Find the most recent earlier journal file (`journal/`, then `journal/archive/`) that has a `### <same title>` heading, ignoring the time suffix and case.
+- Take the `[[...]]` links from that heading line and append them to today's heading — the user linked them by hand last time, so reuse them as-is.
+- No previous occurrence, or its heading has no links → add nothing.
+- Links only: do not copy the previous occurrence's notes or agenda.
+
 - Never run `obsidian-meeting-any-agenda`'s Step 1 user-confirmation prompt or its Step 4 confirmation (category 5 runs only its Steps 2c–2d) — a miss just means no project context, not a blocker.
 
 ---
