@@ -17,7 +17,7 @@ For every journal entry tagged `#claude-review`: copies its **Decisions** into t
 
 **Rules**
 - Edit **in place** with the Edit tool; never rewrite a whole file.
-- Only change: the journal heading's tag and hour, the entry's `Next Steps` that were moved to the project or person (Steps 2c, 3c), the project's `Log` and `Next Actions`, the person's `Log` and `Talking points`, the f2f person's `[[@handle]]` links below the heading of their entry, the `⚠️ journal-review:` line under the heading (Steps 2d, 4).
+- Only change: the journal heading's tag and hour, the entry's `Next Steps` that were moved to the project or person (Steps 2c, 3c), the project's `Log` and `Next Actions`, the person's `Log` and `Talking points`, the f2f person's `[[@handle]]` links below the heading of their entry, the `⚠️ journal-review:` line under the heading (Step 4 removes it).
 - Never touch entries tagged `#claude-reviewed`.
 
 ---
@@ -32,9 +32,16 @@ No marked entries → say so and stop. Otherwise read each journal file and run 
 
 ---
 
-## Step 2 — If one project is linked in the heading
+## Step 2 — Which link decides
 
-**Project:** a `[[...]]` in the heading matching `work/projects/<name>.md`, else `my/projects/<name>.md`. People (`[[@…]]`) and teams (`[[~…]]`) are not projects, so a linked project always takes precedence over linked people or teams. None → skip this step. Several → only 2d, skip 2a–2c and Step 3.
+The **first** `[[...]]` after the meeting title in the heading decides; any further links are ignored. First link is:
+- a project (`work/projects/<name>.md`, else `my/projects/<name>.md`) → Step 2, skip Step 3
+- a person (`[[@handle]]`) → Step 3, skip Step 2
+- anything else (team `[[~…]]`, system `[[$…]]`, unknown, no link) → skip Steps 2 and 3, nothing moved
+
+## Step 2 — First link is a project
+
+**Project:** the first link.
 
 - **Title:** the heading without hour, `[[links]]` and tag; trim leftover spaces and dashes; capitalise the first letter. `magento / presta (11:30–11:55) [[integration-plugins]] #claude-review` → `Magento / presta`.
 - **Date:** from the journal filename (`YYYY-MM-DD.md`).
@@ -68,21 +75,11 @@ Delete from the entry's `Next Steps` every item that is now in the project — j
 - If no item is left, delete the whole `Next Steps` sub-section: its heading and the blank lines after it.
 - `Decisions` and `Overview` are never removed.
 
-### 2d — Several projects: flag the entry
-
-Insert this line directly under the heading, before any other content, unless it is already there:
-
-```markdown
-⚠️ journal-review: several projects linked — keep one project link, the entry will be processed on the next run
-```
-
-The entry keeps `#claude-review` and its hour (Step 4 skips it).
-
 ---
 
-## Step 3 — If one person is linked in the heading (f2f)
+## Step 3 — First link is a person (f2f)
 
-**Person:** a `[[@handle]]` in the heading. Applies only when the heading links no project and exactly one person. Otherwise skip this step.
+**Person:** the first link, `[[@handle]]`.
 
 **Person file:** `@handle.md` in the People dir. Missing → skip 3a–3c, note for the report. **Title** and **Date:** as in Step 2.
 
@@ -119,16 +116,15 @@ In the entry's sub-sections replace each remaining `[[@handle]]` with `@handle`.
 
 ## Step 4 — Flip the tag
 
-Skip entries flagged in 2d. For every other entry, whatever Steps 2–3 did, delete the `⚠️ journal-review:` line under the heading if present, then edit the heading: `#claude-review` → `#claude-reviewed`, and remove the hour. `### magento / presta (11:30–11:55) [[integration-plugins]] #claude-review` → `### magento / presta [[integration-plugins]] #claude-reviewed`. The rest of the entry stays untouched.
+For every entry, whatever Steps 2–3 did, delete the `⚠️ journal-review:` line under the heading if present (left by older runs), then edit the heading: `#claude-review` → `#claude-reviewed`, and remove the hour. `### magento / presta (11:30–11:55) [[integration-plugins]] #claude-review` → `### magento / presta [[integration-plugins]] #claude-reviewed`. The rest of the entry stays untouched.
 
 ---
 
 ## Step 5 — Report
 
 ```
-✅ Journal review: N entries reviewed (N project, N f2f, N flagged, N other)
+✅ Journal review: N entries reviewed (N project, N f2f, N other)
 - 2026-10-19 · <Title> → [[project]] — decisions: added / already there / none / no Log section · next steps: N moved (N added, N already there; removed from the entry) / none / no Next Actions section (kept in the entry)
 - 2026-10-19 · <Title> — f2f with @person: decisions: added / already there / none / no Log section · next steps: N moved to Talking points (N added, N already there; removed from the entry) / none / no person file / no Talking points section (kept in the entry) · N links unlinked
-- 2026-10-19 · <Title> — several projects linked: flagged in the entry, kept `#claude-review`
-- 2026-10-19 · <Title> — nothing moved: <no project or person linked / person file missing>
+- 2026-10-19 · <Title> — nothing moved: <first link is not a project or person / no link / person file missing>
 ```
