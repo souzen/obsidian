@@ -118,8 +118,8 @@ Shared rules for any skill that attaches a note or agenda to a meeting in today'
 Scheduled tasks are launchd jobs. The plists in `launchd/` are the **source of truth** — edit them there, never in `~/Library/LaunchAgents/`.
 
 - `launchd/com.lsosnicki.obsidian-plan-my-day.plist` — runs `claude -p "First run skill obsidian-journal-review, then run skill obsidian-journal-plan-my-day."` Mon–Fri (currently 08:00). Log: `~/Library/Logs/obsidian-plan-my-day.log`
-- `launchd/com.lsosnicki.obsidian-import-wispr.plist` — runs `obsidian-journal-import-wispr` unattended Mon–Fri every hour, 10:00–17:00 (skips notes that would need a new journal entry). Log: `~/Library/Logs/obsidian-import-wispr.log`
-- `launchd/com.lsosnicki.obsidian-review-journal.plist` — runs `obsidian-journal-review` unattended Mon–Fri every hour at :30, 10:30–17:30. Log: `~/Library/Logs/obsidian-review-journal.log`
+- `launchd/com.lsosnicki.obsidian-import-wispr.plist` — runs `obsidian-journal-import-wispr` unattended Mon–Fri every 30 minutes at :00 and :30, 10:00–17:00 (skips notes that would need a new journal entry). Log: `~/Library/Logs/obsidian-import-wispr.log`
+- `launchd/com.lsosnicki.obsidian-review-journal.plist` — runs `obsidian-journal-review` unattended Mon–Fri every 30 minutes at :15 and :45, 10:15–17:15 (offset from the import job so the two never run at the same time). Log: `~/Library/Logs/obsidian-review-journal.log`
 - After editing a plist, deploy it: `launchctl unload ~/Library/LaunchAgents/<name>.plist; cp launchd/<name>.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/<name>.plist`
 
 ## MCP integrations
